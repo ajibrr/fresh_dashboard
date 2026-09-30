@@ -1,0 +1,14 @@
+# Python
+venv/
+__pycache__/
+*.py[cod]
+
+# Generated outputs (recreate by running the pipeline)
+output_data/
+
+# Market data (large JSON day files; keep local)
+input data/
+
+# OS / tooling
+.DS_Store
+.freebuff/
