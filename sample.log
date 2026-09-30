@@ -1,0 +1,179 @@
+================================================================================
+NIFTY DIRECTIONAL STRATEGY ENGINE - OPTIMIZE RUN
+================================================================================
+config            : configs/optimization.json
+mode              : optimize
+input dir         : input data
+file pattern      : NIFTY_*_DASHBOARD.json
+output dir        : output_data/optimize_results
+
+run settings
+  entry rule        : SMA(9) close cross within 3 candles
+  sma_period        : 9
+  window_candles    : 3
+  rr multiples      : 1.0 2.0 3.0
+  min setups        : 50
+  num_workers       : 4
+  directions        : LONG SHORT
+
+sweep scope
+  condition group   : sma_rising_atr
+  enabled only      : yes
+  sma_period values : 16 18 20 22
+  atr_period values : 10 14
+  atr_mult values   : 1.0 1.2 1.4
+  window values     : 2 3
+  cartesian variants: 4 * 2 * 3 * 2 = 48
+
+================================================================================
+DAY 1 - NIFTY_2024-01-15_DASHBOARD.json
+================================================================================
+timeframes      : 5m 15m
+LONG variants   : 48
+SHORT variants  : 48
+
+--- SHORT top variants (by hit rate, min setups 50) ---
+rank  variant             sma  atr  mult  win  hit_rate  setups  entries  trades  no_entry  avg_rr  stop_rate  t1_rate  t2_rate  t3_rate
+1     sma18_a14_m12_w3   18   14   1.2   3    0.61      1210     732      691     478       1.8      0.22       0.41     0.22     0.11
+2     sma20_a14_m10_w3   20   14   1.0   3    0.58      1088     641      608     447       1.9      0.24       0.39     0.23     0.12
+3     sma18_a10_m12_w3   18   10   1.2   3    0.55       934     548      512     386       1.7      0.26       0.38     0.20     0.10
+4     sma22_a14_m12_w3   22   14   1.2   3    0.52       698     410      384     288       1.8      0.27       0.37     0.21     0.11
+5     sma16_a14_m10_w3   16   14   1.0   3    0.51       612     368      342     244       1.6      0.29       0.36     0.18     0.09
+
+--- LONG top variants (by hit rate, min setups 50) ---
+rank  variant             sma  atr  mult  win  hit_rate  setups  entries  trades  no_entry  avg_rr  stop_rate  t1_rate  t2_rate  t3_rate
+1     sma18_a14_m12_w3   18   14   1.2   3    0.60      1186     714      674     472       1.8      0.23       0.40     0.22     0.11
+2     sma20_a14_m10_w3   20   14   1.0   3    0.57      1052     623      590     429       1.9      0.25       0.38     0.23     0.12
+3     sma18_a10_m12_w3   18   10   1.2   3    0.54       897     531      498     366       1.7      0.27       0.37     0.21     0.10
+4     sma22_a14_m12_w3   22   14   1.2   3    0.51       672     398      372     274       1.8      0.28       0.36     0.21     0.11
+5     sma16_a14_m10_w3   16   14   1.0   3    0.50       598     358      333     240       1.6      0.30       0.35     0.18     0.09
+
+no-entry triggers    : 934
+zero-risk skipped   : 5
+eod closes          : 12
+top3 day conc       : 0.32
+daily report        : output_data/optimize_results/optimize_results_2024-01-15_5m_15m.xlsx
+
+================================================================================
+DAY 2 - NIFTY_2024-01-16_DASHBOARD.json
+================================================================================
+timeframes      : 5m 15m
+LONG variants   : 48
+SHORT variants  : 48
+
+--- SHORT top variants (by hit rate, min setups 50) ---
+rank  variant             sma  atr  mult  win  hit_rate  setups  entries  trades  no_entry  avg_rr  stop_rate  t1_rate  t2_rate  t3_rate
+1     sma18_a14_m12_w3   18   14   1.2   3    0.59      1098     664      626     434       1.7      0.23       0.40     0.21     0.10
+2     sma18_a10_m12_w3   18   10   1.2   3    0.56       902     538      505     364       1.7      0.26       0.38     0.20     0.10
+3     sma20_a14_m10_w3   20   14   1.0   3    0.55      1021     602      568     419       1.8      0.25       0.38     0.22     0.11
+4     sma22_a14_m12_w3   22   14   1.2   3    0.50       641     381      357     260       1.7      0.28       0.36     0.20     0.10
+5     sma16_a14_m10_w3   16   14   1.0   3    0.49       576     341      319     235       1.6      0.30       0.34     0.18     0.09
+
+--- LONG top variants (by hit rate, min setups 50) ---
+rank  variant             sma  atr  mult  win  hit_rate  setups  entries  trades  no_entry  avg_rr  stop_rate  t1_rate  t2_rate  t3_rate
+1     sma18_a14_m12_w3   18   14   1.2   3    0.59      1152     691      652     461       1.7      0.24       0.39     0.21     0.10
+2     sma20_a14_m10_w3   20   14   1.0   3    0.56      1018     596      564     422       1.8      0.26       0.37     0.22     0.11
+3     sma18_a10_m12_w3   18   10   1.2   3    0.53       865     514      483     351       1.7      0.28       0.36     0.20     0.10
+4     sma22_a14_m12_w3   22   14   1.2   3    0.50       638     374      349     264       1.7      0.29       0.35     0.20     0.10
+5     sma16_a14_m10_w3   16   14   1.0   3    0.48       562     332      310     230       1.6      0.31       0.33     0.18     0.09
+
+no-entry triggers    : 881
+zero-risk skipped   : 4
+eod closes          : 10
+top3 day conc       : 0.30
+daily report        : output_data/optimize_results/optimize_results_2024-01-16_5m_15m.xlsx
+
+================================================================================
+COMBINED RUN SUMMARY
+================================================================================
+files processed         : 2
+variants evaluated      : 48
+total triggers          : 24596
+total entries           : 14830
+total trades            : 13941
+no-entry triggers       : 1815
+zero-risk skipped       : 9
+eod closes              : 22
+
+combined best SHORT
+  variant : sma18_a14_m12_w3
+  sma     : 18
+  atr     : 14
+  mult    : 1.2
+  win     : 3
+  hit_rate: 0.600
+  setups  : 2308
+  entries : 1396
+  trades  : 1317
+  no_entry: 912
+  avg_rr  : 1.75
+  stop    : 0.225
+  t1_rate : 0.405
+  t2_rate : 0.215
+  t3_rate : 0.105
+
+combined best LONG
+  variant : sma18_a14_m12_w3
+  sma     : 18
+  atr     : 14
+  mult    : 1.2
+  win     : 3
+  hit_rate: 0.595
+  setups  : 2338
+  entries : 1405
+  trades  : 1326
+  no_entry: 933
+  avg_rr  : 1.75
+  stop    : 0.235
+  t1_rate : 0.395
+  t2_rate : 0.215
+  t3_rate : 0.105
+
+near-best SHORT band (within 0.03 of best hit rate, setups >= 50)
+  sma18_a14_m12_w3  hit 0.600  setups 2308  avg_rr 1.75  stop 0.225
+  sma20_a14_m10_w3  hit 0.565  setups 2109  avg_rr 1.85  stop 0.245
+  sma18_a10_m12_w3  hit 0.555  setups 1799  avg_rr 1.70  stop 0.260
+  sma22_a14_m12_w3  hit 0.510  setups 1313  avg_rr 1.75  stop 0.275
+
+near-best LONG band (within 0.03 of best hit rate, setups >= 50)
+  sma18_a14_m12_w3  hit 0.595  setups 2338  avg_rr 1.75  stop 0.235
+  sma20_a14_m10_w3  hit 0.565  setups 2070  avg_rr 1.85  stop 0.255
+  sma18_a10_m12_w3  hit 0.535  setups 1762  avg_rr 1.70  stop 0.270
+  sma22_a14_m12_w3  hit 0.505  setups 1290  avg_rr 1.75  stop 0.285
+
+what the numbers say
+  - best hit rate is not unique to one variant.
+  - sma18 + atr14 + mult1.2 + win3 is top or near-top on both days and both directions.
+  - sma20 + atr14 + mult1.0 + win3 has higher avg_rr in several cuts, but slightly lower hit rate.
+  - sma16 and atr10 rows have lower hit rate and worse stop rate in this data set.
+  - small changes around the best row stay close in hit rate, so the result looks stable.
+  - top3 day concentration is around 0.30-0.32, so the result is not one amazing day only.
+
+ranking conclusion
+  primary candidate   : sma18_a14_m12_w3
+    why   : highest combined hit rate, good sample size, stable across both days,
+            usable on both LONG and SHORT.
+    caution: avg_rr is slightly lower than sma20_a14_m10_w3 in some cuts.
+
+  secondary candidate : sma20_a14_m10_w3
+    why   : higher avg_rr in several views, still strong hit rate and sample size.
+    caution: slightly lower hit rate and slightly more no-entry behavior.
+
+  rejected as final pick
+    sma16 rows    : lower hit rate, worse stop rate.
+    atr10 rows    : weaker overall and more stop-heavy in this data.
+    wide variants : not enough advantage outside the top band.
+
+recommended next step
+  1. freeze sma18_a14_m12_w3 as the first chosen candidate.
+  2. run the next mode on top of it, not beside it.
+  3. keep sma20_a14_m10_w3 as a comparison candidate if avg_rr matters more.
+  4. confirm the chosen candidate still holds on new days/timeframes before final.
+
+one-line conclusion
+  Best usable candidate from this cartesian run:
+  sma=18, atr=14, mult=1.2, window=3.
+  It gives the best balance of hit rate, sample size, stability, and downside.
+  sma=20, atr=14, mult=1.0, window=3 is a fair secondary option,
+  but it is not clearly better overall.
+================================================================================
