@@ -1,242 +1,20 @@
+"""Generate the single-file NIFTY trade chart (chart.html).
+
+Data flow: input data JSON (or xlsx fallback) -> per-second ticks -> OHLC
+candles per timeframe -> SMA9/44 -> pine+OI filter -> SMA9 re-cross entry
+condition -> trades. All chart/trade logic lives in
+app.features.tick_engine; this file only renders SVGs and the HTML shell.
+"""
 from pathlib import Path
-import json, datetime, html
+import json
+
+from app.features.tick_engine import (
+    load_ticks, build_candles, features_for, run_trades,
+)
 
 INPUT = Path("input data")
 OUT = Path("chart.html")
-MARKET_OPEN = "09:15:00"
-MARKET_CLOSE = "15:30:00"
 TIMEFRAMES = [("12sec", 12), ("1min", 60), ("3min", 180), ("5min", 300)]
-RR = [2.0, 3.0, 4.0]
-
-
-def parse_ts(ts):
-    return datetime.datetime.strptime(ts, "%Y-%m-%d %H:%M:%S")
-
-
-def sma(series, period):
-    out = [None] * len(series)
-    for i in range(len(series)):
-        if i < period - 1:
-            continue
-        vals = [series[j] for j in range(i - period + 1, i + 1)]
-        if any(v is None for v in vals):
-            continue
-        out[i] = sum(vals) / period
-    return out
-
-
-def load_ticks(day_dir, date):
-    """Per-second ticks for a date, from NIFTY_YYYYMMDD_DASHBOARD.json (preferred) or .xlsx fallback."""
-    compact = date.replace("-", "")
-    js = day_dir / f"NIFTY_{compact}_DASHBOARD.json"
-    if js.exists():
-        raw = json.loads(js.read_text())
-        ticks = [(parse_ts(t["timestamp"]), float(t["nifty"]), float(t.get("atm") or 0.0))
-                 for t in raw.get("nifty_seconds", [])]
-        flow = [(parse_ts(e["timestamp"]), e) for e in raw.get("flow", [])]
-        flow.sort(key=lambda x: x[0])
-        return ticks, flow, raw.get("expiry", "")
-    xl = day_dir / f"NIFTY_{compact}.xlsx"
-    if xl.exists():
-        from openpyxl import load_workbook
-        wb = load_workbook(xl, read_only=True)
-        ws = wb.active
-        head = [str(c.value or "").strip().lower() for c in next(ws.iter_rows(max_row=1))]
-        i_ts, i_px, i_atm = head.index("timestamp"), head.index("nifty"), head.index("atm") if "atm" in head else None
-        ticks = []
-        for row in ws.iter_rows(min_row=2, values_only=True):
-            if not row or not row[i_ts]:
-                continue
-            ts = row[i_ts]
-            if isinstance(ts, datetime.datetime):
-                dt = ts
-            else:
-                dt = parse_ts(str(ts).replace("T", " ")[:19])
-            ticks.append((dt, float(row[i_px]), float(row[i_atm] or 0.0) if i_atm is not None else 0.0))
-        wb.close()
-        return ticks, [], ""
-    raise FileNotFoundError(f"No JSON or XLSX input for {date}")
-
-
-def build_candles(ticks, flow, date):
-    ticks = sorted(ticks, key=lambda x: x[0])
-    start = datetime.datetime.strptime(f"{date} {MARKET_OPEN}", "%Y-%m-%d %H:%M:%S")
-    end = datetime.datetime.strptime(f"{date} {MARKET_CLOSE}", "%Y-%m-%d %H:%M:%S")
-    step = datetime.timedelta(seconds=TF_SEC)
-    t = start
-    buckets = []
-    while t < end:
-        buckets.append(t)
-        t += step
-    rows = []
-    tick_idx = 0
-    flow_idx = 0
-    last_flow = None
-    for bucket_start in buckets:
-        bucket_end = bucket_start + step
-        prices = []
-        while tick_idx < len(ticks) and ticks[tick_idx][0] < bucket_start:
-            tick_idx += 1
-        j = tick_idx
-        while j < len(ticks) and ticks[j][0] < bucket_end:
-            prices.append(ticks[j][1])
-            j += 1
-        if prices:
-            o, h, l, c, n = prices[0], max(prices), min(prices), prices[-1], len(prices)
-        else:
-            o = h = l = c = 0.0
-            n = 0
-        while flow_idx < len(flow) and flow[flow_idx][0] < bucket_start:
-            flow_idx += 1
-        k = flow_idx
-        lf = None
-        while k < len(flow) and flow[k][0] < bucket_end:
-            lf = flow[k][1]
-            k += 1
-        if lf is not None:
-            last_flow = lf
-        fe = last_flow or {}
-        rows.append({
-            "date": date,
-            "time": bucket_start.strftime("%H:%M:%S"),
-            "open": o, "high": h, "low": l, "close": c,
-            "tick_count": n,
-            "cum_ce": fe.get("cumulative_ce"),
-            "cum_pe": fe.get("cumulative_pe"),
-        })
-    return rows
-
-
-def features_for(rows):
-    closes = [r["close"] if r["tick_count"] > 0 else None for r in rows]
-    return sma(closes, 9), sma(closes, 44)
-
-
-def pine_long(rows, f, i):
-    s9, s44 = f
-    if i < 1:
-        return False
-    cs, ce = i - 9, i - 1
-    if cs < 0 or any(rows[j]["tick_count"] == 0 for j in range(cs, ce + 1)):
-        return False
-    sf, sn, sp = s9[i], s44[i], s44[i - 1]
-    if sf is None or sn is None or sp is None:
-        return False
-    if not (sn > sp and sf > sn and rows[i]["close"] > sf):
-        return False
-    if not all(rows[j]["open"] < s9[j] and rows[j]["close"] < s9[j] for j in range(cs, ce + 1)):
-        return False
-    return True
-
-
-def pine_short(rows, f, i):
-    s9, s44 = f
-    if i < 1:
-        return False
-    cs, ce = i - 9, i - 1
-    if cs < 0 or any(rows[j]["tick_count"] == 0 for j in range(cs, ce + 1)):
-        return False
-    sf, sn, sp = s9[i], s44[i], s44[i - 1]
-    if sf is None or sn is None or sp is None:
-        return False
-    if not (sn < sp and sf < sn and rows[i]["close"] < sf):
-        return False
-    if not all(rows[j]["open"] > s9[j] and rows[j]["close"] > s9[j] for j in range(cs, ce + 1)):
-        return False
-    return True
-
-
-def oi_ok(rows, i, side):
-    ce, pe = rows[i].get("cum_ce"), rows[i].get("cum_pe")
-    if ce is None or pe is None:
-        return False
-    return (pe > ce) if side == "LONG" else (ce > pe)
-
-
-def entry_cond_candle(rows, s9, i, direction, window=3):
-    for j in range(i + 1, min(i + window + 1, len(rows))):
-        r = rows[j]
-        if r["tick_count"] == 0:
-            continue
-        sv = s9[j]
-        if sv is None:
-            continue
-        if direction == "LONG" and r["close"] > sv:
-            return j
-        if direction == "SHORT" and r["close"] < sv:
-            return j
-    return None
-
-
-def run_trades(rows, s9, s44, direction):
-    trades = []
-    open_until = -1
-    for i in range(len(rows) - 1):
-        if rows[i]["tick_count"] == 0:
-            continue
-        if direction == "LONG" and not pine_long(rows, (s9, s44), i):
-            continue
-        if direction == "SHORT" and not pine_short(rows, (s9, s44), i):
-            continue
-        if not oi_ok(rows, i, direction):
-            continue
-        ec = entry_cond_candle(rows, s9, i, direction)
-        if ec is None:
-            continue
-        ae = None
-        for j in range(ec + 1, len(rows)):
-            if rows[j]["tick_count"] == 0:
-                continue
-            ae = j
-            break
-        if ae is None or ae <= open_until:
-            continue
-        ec_row, ae_row = rows[ec], rows[ae]
-        entry_price = ae_row["close"]
-        stop_price = ec_row["low"] if direction == "LONG" else ec_row["high"]
-        risk = abs(entry_price - stop_price)
-        if risk == 0:
-            continue
-        targets = {r: entry_price + r * risk if direction == "LONG" else entry_price - r * risk for r in RR}
-        outcome = exit_idx = exit_price = None
-        for j in range(ae + 1, len(rows)):
-            r = rows[j]
-            if r["tick_count"] == 0:
-                continue
-            hit_stop = r["low"] <= stop_price if direction == "LONG" else r["high"] >= stop_price
-            for rr in RR:
-                if outcome is not None:
-                    continue
-                hit_target = r["high"] >= targets[rr] if direction == "LONG" else r["low"] <= targets[rr]
-                if hit_stop:
-                    outcome, exit_idx, exit_price = "Stop Loss", j, stop_price
-                    break
-                if hit_target:
-                    outcome, exit_idx, exit_price = "Target", j, targets[rr]
-                    break
-            if outcome is not None:
-                break
-        if outcome is None:
-            last = len(rows) - 1
-            while rows[last]["tick_count"] == 0 and last > ae:
-                last -= 1
-            outcome, exit_idx, exit_price = "End Of Data", last, rows[last]["close"]
-        pnl = round((exit_price - entry_price) if direction == "LONG" else (entry_price - exit_price), 2)
-        trades.append({
-            "filter_time": rows[i]["time"],
-            "entry_cond_time": ec_row["time"],
-            "entry_time": ae_row["time"],
-            "exit_time": rows[exit_idx]["time"],
-            "entry_price": entry_price,
-            "stop_price": stop_price,
-            "exit_price": exit_price,
-            "rr": max(RR),
-            "outcome": outcome,
-            "pnl": pnl,
-        })
-        open_until = exit_idx
-    return trades
-
 
 # ---- Render one (day, timeframe) as an SVG string with trade overlays ----
 
@@ -246,7 +24,8 @@ BG, GRID, TXT = "#0b1220", "#1e293b", "#94a3b8"
 
 ES = {
     "Target": ("T", "#f59e0b"),
-    "Stop Loss": ("S", "#f43f5e"),        "End Of Data": ("E", "#94a3b8"),
+    "Stop Loss": ("S", "#f43f5e"),
+    "End Of Data": ("E", "#94a3b8"),
 }
 
 
@@ -318,10 +97,8 @@ def render_chart(date, tf_label, rows, s9, s44, trades):
     p.append(sma_path(s9, SMA9_C))
     p.append(sma_path(s44, SMA44_C))
     for t in trades:
-        et = t["entry_time"]
-        xt = t["exit_time"]
-        ei = next((k for k, r in enumerate(rows) if r["time"] == et), None)
-        xi2 = next((k for k, r in enumerate(rows) if r["time"] == xt), None)
+        ei = next((k for k, r in enumerate(rows) if r["time"] == t["entry_time"]), None)
+        xi2 = next((k for k, r in enumerate(rows) if r["time"] == t["exit_time"]), None)
         if ei is None or xi2 is None:
             continue
         x_e, x_x = xi(ei), xi(xi2)
@@ -349,8 +126,6 @@ def trade_row_html(t):
 
 
 def main():
-    global TF_SEC
-    # ---- Build all days / timeframes ----
     days = []
     for path in sorted(INPUT.glob("NIFTY_*_DASHBOARD.json")):
         stem = path.stem.replace("NIFTY_", "").replace("_DASHBOARD", "")
@@ -362,8 +137,7 @@ def main():
     for date in days:
         ticks, flow, _ = load_ticks(INPUT, date)
         for tf_label, tf_sec in TIMEFRAMES:
-            TF_SEC = tf_sec
-            rows = build_candles(ticks, flow, date)
+            rows = build_candles(ticks, flow, date, tf_sec)
             s9, s44 = features_for(rows)
             day_trades = []
             for direction in ("LONG", "SHORT"):
@@ -382,8 +156,7 @@ def main():
 
     TRADES.sort(key=lambda t: (t["date"], ["12sec", "1min", "3min", "5min"].index(t["tf"]), t["entry_time"]))
 
-    top = []
-    top.append("<option value='ALL'>ALL DAYS</option>")
+    top = ["<option value='ALL'>ALL DAYS</option>"]
     for d in days:
         top.append("<option value='%s'>%s</option>" % (d, d))
     tf_opts = "".join("<option value='%s'>%s</option>" % (t, t) for t in ("12sec", "1min", "3min", "5min"))
@@ -430,7 +203,6 @@ summary{cursor:pointer;color:#60a5fa}
 <script>
 var CHARTS=__CHARTS__,TRADES=__TRADES__,DAYS=__DAYS__;
 var scale=1,tx=0,ty=0;
-function key(){return day.value+"|"+tf.value}
 function draw(){
  var tfv=tf.value,ts=[],cd=0,parts=[];
  if(day.value==="ALL"){
@@ -486,6 +258,7 @@ document.getElementById("all-details").addEventListener("toggle",function(){wrap
     tot = round(sum(t["pnl"] for t in TRADES), 2)
     print("trades: %d (LONG %d / SHORT %d) | Target %d / Stop %d / EOD %d | total P&L %+.2f pts"
           % (len(TRADES), lt, st, tt, sl, eod, tot))
+
 
 if __name__ == "__main__":
     main()
