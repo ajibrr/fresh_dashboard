@@ -232,7 +232,7 @@ def _analyze_day(rows, features, direction, conditions, rr_multiples, variant, t
         risk = abs(entry_price - stop_price)
         if risk == 0:
             results.append(_trade_row(rows, entry_idx, entry_idx, direction, entry_price, stop_price,
-                                      None, "Zero Risk — Skipped", None, None, variant,
+                                      None, "Zero Risk - Skipped", None, None, variant,
                                       tf_seconds, tf_label, condition_parts, variant_label))
             continue
 
@@ -347,7 +347,7 @@ class StrategyAnalyzer:
 
     def entry_candle_summary(self):
         if not self.entry_candle_cfg["enabled"]:
-            return ("disabled — the trigger candle itself is the entry candle "
+            return ("disabled - the trigger candle itself is the entry candle "
                     "(entry at its close, SL at its low/high)")
         return (f"close crosses SMA({self.entry_candle_cfg['sma_period']}) "
                 f"within {self.entry_candle_cfg['window_candles']} candles of the trigger")
@@ -467,12 +467,9 @@ class StrategyAnalyzer:
 
         input_dir = self.config.get("data", {}).get("input_dir")
         num_workers = self._resolve_num_workers()
-        print(f"Process started for the file : {input_dir}")
-        print(f"Timeframes tested : {self.timeframe_labels}")
-        print(f"Entry candle rule : {self.entry_candle_summary()}")
-        print(f"R:R multiples     : {self.rr_multiples}")
-        print(f"Total no of variation : {self._variation_breakdown()} = {len(tasks)}")
-        print(f"Workers : {num_workers} (of {os.cpu_count() or 1} CPU cores available)")
+        # Per-day run lines are deliberately NOT printed here: the optimize
+        # runner's own header/day report already covers them, and extra
+        # stdout lines would break the sample.log-style report structure.
 
         setups = []
         start = time.time()
@@ -492,7 +489,8 @@ class StrategyAnalyzer:
                 self._print_progress(i, len(tasks), start)
 
         print(file=sys.stderr)  # newline after the in-place progress bar
-        print(f"Completed {len(tasks)} variations in {time.time() - start:.1f}s using {num_workers} worker(s)")
+        print(f"Completed {len(tasks)} variations in {time.time() - start:.1f}s "
+              f"using {num_workers} worker(s)", file=sys.stderr)
 
         return setups
 

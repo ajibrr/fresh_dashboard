@@ -39,7 +39,7 @@ def main():
     with log_path.open("w", encoding="utf-8") as log_file:
         sys.stdout = _Tee(real_stdout, log_file)
         try:
-            run_optimize(config)
+            run_optimize(config, config_path=args.config)
         finally:
             sys.stdout = real_stdout
 

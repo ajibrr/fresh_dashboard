@@ -137,7 +137,7 @@ class TestLongSimulation(unittest.TestCase):
         rows[4]["low"] = rows[4]["close"]  # degenerate candle: risk = 0
         rows_out = run_sim(rows, "LONG", trigger_indices={3})
         self.assertEqual(len(rows_out), 1)
-        self.assertEqual(rows_out[0]["outcome"], "Zero Risk — Skipped")
+        self.assertEqual(rows_out[0]["outcome"], "Zero Risk - Skipped")
         self.assertIsNone(rows_out[0]["rr_multiple"])
 
     def test_disabled_entry_stage_triggers_become_entries(self):
