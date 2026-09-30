@@ -10,43 +10,44 @@
   "strategy": {
     "name": "sma44_rsi14_sweep",
     "entry_candle": {
+      "enabled": false,
       "sma_period": 9,
-      "window_candles": 4
+      "window_candles": 30
     },
     "entry": {
-      "LONG": {
-        "conditions": [
-          { "type": "sma_rising_atr", "period": 44, "candles": 5, "atr_period": 14, "atr_multiplier": 0.45, "enabled": true },
-          { "type": "rsi_range", "period": 14, "min": 30, "max": 70, "enabled": true },
-          { "type": "rsi_extreme_lookback", "period": 14, "side": "above", "level": 70, "lookback": 20, "enabled": true },
-          { "type": "sma_cross_above", "fast_period": 9, "slow_period": 44, "cross_atr_period": 14, "cross_atr_multiplier": 0.25, "enabled": true },
-          { "type": "price_stuck_below_sma", "period": 9, "window_candles": 2, "skip_recent": 1, "enabled": true },
-          { "type": "rsi_below_signal_lookback", "period": 14, "signal_period": 14, "signal_window_candles": 3, "skip_recent": 1, "enabled": true },
+
+            "LONG": {
+        "conditions": [ 
+          { "type": "sma_rising_atr", "period": 44, "candles": [3, 5, 7, 9], "atr_period": 14, "atr_multiplier": [0.05, 0.1, 0.15,0.20,0.25,0.30,0.35,0.40,0.45,0.50,0.55,0.60,0.65,0.70,0.75,0.80,0.85,0.90,0.95,1.0], "enabled": true },    { "type": "rsi_range", "period": 14, "min": 30, "max": [ 70], "enabled": false },
+          { "type": "rsi_extreme_lookback", "period": 14, "side": "above", "level": 70, "lookback": [10, 20], "enabled": false },
+          { "type": "sma_cross_above", "fast_period": 9, "slow_period": 44, "cross_atr_period": 14, "cross_atr_multiplier": [0.05, 0.25, 0.9], "enabled": false },
+          { "type": "price_stuck_below_sma", "period": 9, "window_candles": [2, 3, 5], "skip_recent": 1, "enabled": false },
+          { "type": "rsi_below_signal_lookback", "period": 14, "signal_period": 14, "signal_window_candles": [2, 3, 5], "skip_recent": 1, "enabled": false },
           { "type": "low_in_sma_band", "period": 44, "enabled": true },
           { "type": "cumulative_oi_compare", "side": "pe_greater", "enabled": true },
-          { "type": "low_below_bollinger_lower", "bb_period": [20, 22, 26], "bb_num_std": [1.5, 2, 2.5], "enabled": true }
+          { "type": "low_below_bollinger_lower", "bb_period": [20, 22], "bb_num_std": [1.5, 2], "enabled": true }
         ]
       },
       "SHORT": {
         "conditions": [
-          { "type": "sma_falling_atr", "period": 44, "candles": 3, "atr_period": 14, "atr_multiplier": 0.45, "enabled": true },
-          { "type": "rsi_range", "period": 14, "min": 30, "max": 70, "enabled": true },
-          { "type": "rsi_extreme_lookback", "period": 14, "side": "below", "level": 30, "lookback": 20, "enabled": true },
-          { "type": "sma_cross_below", "fast_period": 9, "slow_period": 44, "cross_atr_period": 14, "cross_atr_multiplier": 0.25, "enabled": true },
-          { "type": "price_stuck_above_sma", "period": 9, "window_candles": 2, "skip_recent": 1, "enabled": true },
-          { "type": "rsi_above_signal_lookback", "period": 14, "signal_period": 14, "signal_window_candles": 5, "skip_recent": 1, "enabled": true },
+          { "type": "sma_falling_atr", "period": 44, "candles": [3, 5, 7,9], "atr_period": 14, "atr_multiplier": [0.05, 0.1, 0.15,0.20,0.25,0.30,0.35,0.40,0.45,0.50,0.55,0.60,0.65,0.70,0.75,0.80,0.85,0.90,0.95,1.0], "enabled": true },
+          { "type": "rsi_range", "period": 14, "min": 30, "max": [ 70], "enabled": false },
+          { "type": "rsi_extreme_lookback", "period": 14, "side": "below", "level": 30, "lookback": [10, 20], "enabled": false },
+          { "type": "sma_cross_below", "fast_period": 9, "slow_period": 44, "cross_atr_period": 14, "cross_atr_multiplier": [0.05, 0.25, 0.9], "enabled": false },
+          { "type": "price_stuck_above_sma", "period": 9, "window_candles": [2, 3, 5], "skip_recent": 1, "enabled": false },
+          { "type": "rsi_above_signal_lookback", "period": 14, "signal_period": 14, "signal_window_candles": [2, 3, 5], "skip_recent": 1, "enabled": false },
           { "type": "high_in_sma_band", "period": 44, "enabled": true },
           { "type": "cumulative_oi_compare", "side": "ce_greater", "enabled": true },
-          { "type": "high_above_bollinger_upper", "bb_period": [20, 22, 26], "bb_num_std": [1.5, 2, 2.5], "enabled": true }
+          { "type": "high_above_bollinger_upper", "bb_period": [20, 22], "bb_num_std": [1.5, 2], "enabled": true }
         ]
       }
     },
     "feature_periods": { "sma": [9, 44], "rsi": [14], "atr": [14] }
   },
   "analysis": {
-    "rr_multiples": [2.0],
+    "rr_multiples": [2,3,4],
     "num_workers": 12,
-    "min_setups_for_ranking": 20,
+    "min_setups_for_ranking": 1,
     "max_loss_threshold_points": -10.0
   },
   "output": {

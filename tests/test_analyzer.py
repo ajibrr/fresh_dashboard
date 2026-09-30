@@ -36,7 +36,8 @@ def make_rows(closes, tick_count=1):
     return rows
 
 
-def run_sim(rows, direction, trigger_indices, sma_period=3, window=3, rr_multiples=(2.0, 3.0, 4.0)):
+def run_sim(rows, direction, trigger_indices, sma_period=3, window=3, rr_multiples=(2.0, 3.0, 4.0),
+            entry_stage_enabled=True):
     """Run _analyze_day with the condition layer stubbed: candles whose
     index is in trigger_indices are the only triggers. This isolates the
     trigger -> entry-candle -> exit orchestration from the (independently
@@ -54,8 +55,8 @@ def run_sim(rows, direction, trigger_indices, sma_period=3, window=3, rr_multipl
                            side_effect=lambda c, r, f, i: i in trigger_indices):
         return _analyze_day(
             rows, features, direction, [],
-            list(rr_multiples), {}, 12, "12sec", "test", "default",
-            {"sma_period": sma_period, "window_candles": window},
+            list(rr_multiples), {}, 12, "12sec", ["test-condition"], "default",
+            {"enabled": entry_stage_enabled, "sma_period": sma_period, "window_candles": window},
         )
 
 
@@ -138,6 +139,27 @@ class TestLongSimulation(unittest.TestCase):
         self.assertEqual(len(rows_out), 1)
         self.assertEqual(rows_out[0]["outcome"], "Zero Risk — Skipped")
         self.assertIsNone(rows_out[0]["rr_multiple"])
+
+    def test_disabled_entry_stage_triggers_become_entries(self):
+        # entry stage off: the trigger candle ITSELF is the entry candle —
+        # entry at its close, SL at its low, no 'No Entry' outcomes.
+        rows = make_rows([95, 96, 97, 99, 100, 101, 90, 90, 90])
+        rows_out = run_sim(rows, "LONG", trigger_indices={3}, rr_multiples=(2.0,),
+                           entry_stage_enabled=False)
+        self.assertEqual(len(rows_out), 1)
+        trade = rows_out[0]
+        self.assertEqual(trade["trigger_time"], rows[3]["time"])
+        self.assertEqual(trade["entry_candle_time"], rows[3]["time"])
+        self.assertEqual(trade["entry_price"], 99.0)   # trigger's close
+        self.assertEqual(trade["stop_price"], 97.0)    # trigger's low
+
+    def test_disabled_entry_stage_never_yields_no_entry(self):
+        # candles that would never produce an SMA-cross entry in the window
+        # still trade when the stage is off — every trigger becomes a trade
+        rows = make_rows([95, 96, 97, 99, 98, 97, 96, 95, 94])
+        rows_out = run_sim(rows, "LONG", trigger_indices={3}, entry_stage_enabled=False)
+        self.assertTrue(rows_out)
+        self.assertNotIn("No Entry", {r["outcome"] for r in rows_out})
 
     def test_data_gap_trigger_candle_is_skipped(self):
         rows = make_rows([95, 96, 97, 99, 105, 106, 107, 108, 109])

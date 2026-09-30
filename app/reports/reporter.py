@@ -66,7 +66,24 @@ def display_header(key):
         return f"Exit Time 1:{key.rsplit('_', 1)[-1]}"
     if key.startswith("pnl_1_"):
         return f"P&L 1:{key.rsplit('_', 1)[-1]} (points)"
+    # _condition_columns() builds cond_1..cond_N — one column per
+    # condition in the AND chain, so Excel filters work per condition.
+    if key.startswith("cond_") and key[5:].isdigit():
+        return f"Cond {key[5:]}"
     return _DISPLAY_HEADERS.get(key, key.replace("_", " ").title())
+
+
+def _cell_value(value):
+    """Coerce any value into something openpyxl accepts in a cell.
+    openpyxl raises ValueError("Cannot convert ... to Excel") for
+    lists/dicts/etc; a sheet writer must never take the whole run down
+    over one weird cell, so containers are joined into a readable string
+    ("a | b | c") instead."""
+    if isinstance(value, (list, tuple, set)):
+        return " | ".join(str(_cell_value(v)) for v in value)
+    if isinstance(value, dict):
+        return " | ".join(f"{k}={_cell_value(v)}" for k, v in value.items())
+    return value
 
 
 def write_rows(path, rows, display=True):
@@ -96,7 +113,7 @@ def write_sheet(wb, sheet_name, rows):
         cell.alignment = Alignment(horizontal="center")
 
     for row in rows:
-        ws.append([row.get(h) for h in headers])
+        ws.append([_cell_value(row.get(h)) for h in headers])
 
     ws.freeze_panes = "A2"
     ws.auto_filter.ref = ws.dimensions

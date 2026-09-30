@@ -12,6 +12,10 @@ Two stages, evaluated candle by candle on each timeframe:
    candles (default 3, never counting the trigger candle itself), the first
    candle whose **close** crosses beyond SMA(`strategy.entry_candle.sma_period`,
    default 9): close **above** SMA for LONG, close **below** SMA for SHORT.
+   Set `"enabled": false` under `strategy.entry_candle` to skip this stage
+   entirely — the trigger candle itself then becomes the entry candle
+   (entry at its close, SL at its low/high), and no trigger is ever
+   recorded as "No Entry".
 
 If no candle qualifies inside the window, the trigger is recorded with
 outcome **"No Entry"** (one row, no trade).

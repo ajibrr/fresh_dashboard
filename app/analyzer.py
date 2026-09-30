@@ -32,6 +32,8 @@ except ImportError:
 #   2. ENTRY candle — within the next `window_candles` candles, the first
 #      one whose CLOSE crosses beyond SMA(sma_period) (above for LONG,
 #      below for SHORT). The trade enters at that candle's close.
+#      With entry_candle.enabled=false this stage is skipped: the trigger
+#      candle itself becomes the entry candle (entry at its close).
 #   Stop-loss = entry candle's low (LONG) / high (SHORT); targets are the
 #   configured R:R multiples of that risk. Stop wins a same-bar tie.
 # ============================================================
@@ -68,8 +70,22 @@ def _find_entry_candle(rows, i, direction, features, sma_period, window_candles)
     return None
 
 
+def _condition_columns(condition_parts):
+    """One filterable Excel column per condition: cond_1..cond_N put each
+    condition's own type(params) in its own cell, instead of one giant
+    AND-string — so results can be filtered per condition in Excel.
+    A nested part (shouldn't happen, but has before) is flattened to a
+    joined string so no cell ever receives a raw list."""
+    cols = {}
+    for idx, part in enumerate(condition_parts, 1):
+        if isinstance(part, (list, tuple)):
+            part = " AND ".join(str(p) for p in part)
+        cols[f"cond_{idx}"] = part
+    return cols
+
+
 def _trigger_row(rows, i, direction, outcome, variant,
-                 tf_seconds, tf_label, condition_str, variant_label):
+                 tf_seconds, tf_label, condition_parts, variant_label):
     """A trigger that never produced a trade (no qualifying entry candle
     inside the window). One row per trigger — R:R is not applicable."""
     return {
@@ -78,7 +94,7 @@ def _trigger_row(rows, i, direction, outcome, variant,
         "date": rows[i]["date"],
         "trigger_time": rows[i]["time"],
         "direction": direction,
-        "condition": condition_str,
+        **_condition_columns(condition_parts),
         "variant": variant_label,
         "entry_candle_time": None,
         "entry_price": None,
@@ -90,13 +106,14 @@ def _trigger_row(rows, i, direction, outcome, variant,
         "exit_price": None,
         "pnl_points": None,
         "holding_minutes": None,
+        "condition": " AND ".join(condition_parts) if condition_parts else "no filter",
         **variant,  # each swept param (e.g. candles, lookback) as its own column
     }
 
 
 def _trade_row(rows, i, entry_idx, direction, entry_price, stop_price, rr, outcome,
                exit_time, exit_price, variant,
-               tf_seconds, tf_label, condition_str, variant_label):
+               tf_seconds, tf_label, condition_parts, variant_label):
     """A trade that actually entered at the entry candle's close."""
     target_price = None
     pnl = None
@@ -113,7 +130,7 @@ def _trade_row(rows, i, entry_idx, direction, entry_price, stop_price, rr, outco
         "date": rows[i]["date"],
         "trigger_time": rows[i]["time"],
         "direction": direction,
-        "condition": condition_str,
+        **_condition_columns(condition_parts),
         "variant": variant_label,
         "entry_candle_time": rows[entry_idx]["time"],
         "entry_price": entry_price,
@@ -125,12 +142,13 @@ def _trade_row(rows, i, entry_idx, direction, entry_price, stop_price, rr, outco
         "exit_price": exit_price,
         "pnl_points": pnl,
         "holding_minutes": _duration_minutes(rows[entry_idx]["time"], exit_time),
+        "condition": " AND ".join(condition_parts) if condition_parts else "no filter",
         **variant,
     }
 
 
 def _walk_to_exit(rows, i, entry_idx, direction, entry_price, stop_price, targets, rr_multiples, variant,
-                  tf_seconds, tf_label, condition_str, variant_label):
+                  tf_seconds, tf_label, condition_parts, variant_label):
     """Walk forward from the candle AFTER the entry candle: per R:R, either
     the target or the stop is hit first. Stop wins a same-bar tie
     (conservative default).
@@ -157,12 +175,12 @@ def _walk_to_exit(rows, i, entry_idx, direction, entry_price, stop_price, target
             if hit_stop:
                 results.append(_trade_row(rows, i, entry_idx, direction, entry_price, stop_price,
                                           rr, "Stop Loss", rows[j]["time"], stop_price, variant,
-                                          tf_seconds, tf_label, condition_str, variant_label))
+                                          tf_seconds, tf_label, condition_parts, variant_label))
                 unresolved[rr] = False
             elif hit_target:
                 results.append(_trade_row(rows, i, entry_idx, direction, entry_price, stop_price,
                                           rr, "Target", rows[j]["time"], targets[rr], variant,
-                                          tf_seconds, tf_label, condition_str, variant_label))
+                                          tf_seconds, tf_label, condition_parts, variant_label))
                 unresolved[rr] = False
 
         if not any(unresolved.values()):
@@ -177,15 +195,16 @@ def _walk_to_exit(rows, i, entry_idx, direction, entry_price, stop_price, target
                 results.append(_trade_row(rows, i, last_valid, direction, entry_price, stop_price,
                                           rr, "End Of Data", rows[last_valid]["time"],
                                           rows[last_valid]["close"], variant, tf_seconds, tf_label,
-                                          condition_str, variant_label))
+                                          condition_parts, variant_label))
 
     return results
 
 
 def _analyze_day(rows, features, direction, conditions, rr_multiples, variant, tf_seconds, tf_label,
-                 condition_str, variant_label, entry_candle_cfg):
+                 condition_parts, variant_label, entry_candle_cfg):
     n = len(rows)
     results = []
+    entry_stage_enabled = entry_candle_cfg.get("enabled", True)
     sma_period = entry_candle_cfg["sma_period"]
     window = entry_candle_cfg["window_candles"]
 
@@ -196,11 +215,16 @@ def _analyze_day(rows, features, direction, conditions, rr_multiples, variant, t
         if not evaluate_all(conditions, rows, features, i):
             continue
 
-        entry_idx = _find_entry_candle(rows, i, direction, features, sma_period, window)
-        if entry_idx is None:
-            results.append(_trigger_row(rows, i, direction, "No Entry", variant,
-                                        tf_seconds, tf_label, condition_str, variant_label))
-            continue
+        if entry_stage_enabled:
+            entry_idx = _find_entry_candle(rows, i, direction, features, sma_period, window)
+            if entry_idx is None:
+                results.append(_trigger_row(rows, i, direction, "No Entry", variant,
+                                            tf_seconds, tf_label, condition_parts, variant_label))
+                continue
+        else:
+            # Entry stage disabled: the trigger candle itself is the entry
+            # candle — entry at its close, SL at its low (LONG) / high (SHORT).
+            entry_idx = i
 
         entry_price = rows[entry_idx]["close"]
         stop_price = rows[entry_idx]["low"] if direction == "LONG" else rows[entry_idx]["high"]
@@ -209,7 +233,7 @@ def _analyze_day(rows, features, direction, conditions, rr_multiples, variant, t
         if risk == 0:
             results.append(_trade_row(rows, entry_idx, entry_idx, direction, entry_price, stop_price,
                                       None, "Zero Risk — Skipped", None, None, variant,
-                                      tf_seconds, tf_label, condition_str, variant_label))
+                                      tf_seconds, tf_label, condition_parts, variant_label))
             continue
 
         targets = {}
@@ -218,7 +242,7 @@ def _analyze_day(rows, features, direction, conditions, rr_multiples, variant, t
 
         results.extend(_walk_to_exit(rows, i, entry_idx, direction, entry_price, stop_price,
                                      targets, rr_multiples, variant, tf_seconds, tf_label,
-                                     condition_str, variant_label))
+                                     condition_parts, variant_label))
 
     return results
 
@@ -236,22 +260,38 @@ def _analyze_day(rows, features, direction, conditions, rr_multiples, variant, t
 _worker_data_by_timeframe = None
 _worker_strategy_config = None
 _worker_entry_candle_cfg = None
+_features_cache = None  # {(tf_seconds, date): features} — built once per day, reused across variants
 
 
 def _init_worker(data_by_timeframe, strategy_config, entry_candle_cfg):
-    global _worker_data_by_timeframe, _worker_strategy_config, _worker_entry_candle_cfg
+    global _worker_data_by_timeframe, _worker_strategy_config, _worker_entry_candle_cfg, _features_cache
     _worker_data_by_timeframe = data_by_timeframe
     _worker_strategy_config = strategy_config
     _worker_entry_candle_cfg = entry_candle_cfg
+    _features_cache = {}
+
+
+def _worker_features(tf_seconds, date):
+    """Indicators for one day, computed once and reused by every variant
+    of every direction on that day. Variant sweeps only change condition
+    PARAMETER values (candles/lookback/multiplier/...), never which
+    indicator series exist, so one build per (timeframe, date) serves all
+    variants — without this cache a 1000-variant sweep would rebuild every
+    SMA/RSI/ATR 1000 times per day."""
+    key = (tf_seconds, date)
+    if key not in _features_cache:
+        rows = _worker_data_by_timeframe[tf_seconds][date]
+        _features_cache[key] = build_features(rows, _worker_strategy_config)
+    return _features_cache[key]
 
 
 def _run_task(task):
     (tf_seconds, date, direction, conditions, rr_multiples, variant,
-     tf_label, condition_str, variant_label) = task
+     tf_label, condition_parts, variant_label) = task
     rows = _worker_data_by_timeframe[tf_seconds][date]
-    features = build_features(rows, _worker_strategy_config)
+    features = _worker_features(tf_seconds, date)
     return _analyze_day(rows, features, direction, conditions, rr_multiples, variant, tf_seconds, tf_label,
-                        condition_str, variant_label, _worker_entry_candle_cfg)
+                        condition_parts, variant_label, _worker_entry_candle_cfg)
 
 
 class StrategyAnalyzer:
@@ -265,7 +305,9 @@ class StrategyAnalyzer:
          Entry fills at that candle's close; stop-loss is that candle's
          low (LONG) / high (SHORT); each configured R:R multiple of the
          risk becomes a target. A trigger whose window passes without a
-         qualifying close is recorded as "No Entry".
+         qualifying close is recorded as "No Entry". With
+         strategy.entry_candle.enabled = false the whole stage is skipped
+         and the trigger candle itself is the entry candle.
 
     Every trigger is scored independently — no "one trade at a time"
     portfolio logic. The single-position portfolio engine belongs to a
@@ -290,17 +332,23 @@ class StrategyAnalyzer:
     def _resolve_entry_candle_cfg(strategy_config):
         """The entry-candle rule, read from strategy.entry_candle (or
         strategy.entry.entry_candle — same thing, wherever you prefer to
-        keep it). Defaults: SMA(9), a 3-candle window."""
+        keep it). Defaults: enabled, SMA(9), a 3-candle window. With
+        enabled=false the stage is skipped entirely and the trigger
+        candle itself becomes the entry candle."""
         for candidate in (strategy_config.get("entry", {}), strategy_config):
             ec = candidate.get("entry_candle")
             if isinstance(ec, dict):
                 return {
+                    "enabled": bool(ec.get("enabled", True)),
                     "sma_period": int(ec.get("sma_period", 9)),
                     "window_candles": int(ec.get("window_candles", 3)),
                 }
-        return {"sma_period": 9, "window_candles": 3}
+        return {"enabled": True, "sma_period": 9, "window_candles": 3}
 
     def entry_candle_summary(self):
+        if not self.entry_candle_cfg["enabled"]:
+            return ("disabled — the trigger candle itself is the entry candle "
+                    "(entry at its close, SL at its low/high)")
         return (f"close crosses SMA({self.entry_candle_cfg['sma_period']}) "
                 f"within {self.entry_candle_cfg['window_candles']} candles of the trigger")
 
@@ -351,15 +399,20 @@ class StrategyAnalyzer:
         params = ", ".join(f"{k}={v}" for k, v in c.items() if k not in ("type", "enabled"))
         return f"{c['type']}({params})" if params else c["type"]
 
+    def condition_parts(self, direction, variant):
+        """The direction's concrete conditions as a list of per-condition
+        strings — one element per condition, e.g.
+        ['sma_rising_atr(period=44, ...)', 'rsi_range(period=14, ...)'].
+        Each element lands in its own filterable Excel column (cond_1..N)."""
+        return [self._describe_condition(c) for c in self._concrete_conditions(direction, variant)]
+
     def condition_summary(self, direction, variant):
         """Human-readable description of exactly what's being tested for
         this direction/variant, e.g. 'sma_rising(period=44, candles=8) AND
         rsi_extreme_lookback(period=14, side=above, level=70, lookback=10)'
         — or 'no filter' when entry conditions are empty."""
-        conditions = self._concrete_conditions(direction, variant)
-        if not conditions:
-            return "no filter"
-        return " AND ".join(self._describe_condition(c) for c in conditions)
+        parts = self.condition_parts(direction, variant)
+        return " AND ".join(parts) if parts else "no filter"
 
     @staticmethod
     def _variant_label(variant):
@@ -407,10 +460,10 @@ class StrategyAnalyzer:
                 for direction in directions:
                     for variant in self.variants[direction]:
                         conditions = self._concrete_conditions(direction, variant)
-                        condition_str = self.condition_summary(direction, variant)
+                        condition_parts = self.condition_parts(direction, variant)
                         variant_label = self._variant_label(variant)
                         tasks.append((tf_seconds, date, direction, conditions, self.rr_multiples, variant,
-                                      tf_label, condition_str, variant_label))
+                                      tf_label, condition_parts, variant_label))
 
         input_dir = self.config.get("data", {}).get("input_dir")
         num_workers = self._resolve_num_workers()
@@ -512,7 +565,7 @@ class StrategyAnalyzer:
             tf_label = timeframe_label(tf_seconds)
             for direction in directions:
                 for variant in self.variants[direction]:
-                    condition = self.condition_summary(direction, variant)
+                    cond_cols = _condition_columns(self.condition_parts(direction, variant))
                     variant_label = self._variant_label(variant)
                     n_no_entry = no_entry_counts.get((tf_seconds, direction, variant_label), 0)
                     for rr in self.rr_multiples:
@@ -528,7 +581,7 @@ class StrategyAnalyzer:
                         row = {
                             "timeframe": tf_label,
                             "direction": direction,
-                            "condition": condition,
+                            **cond_cols,
                             "variant": variant_label,
                             "rr_multiple": rr,
                             "total_setups": total,
@@ -556,7 +609,7 @@ class StrategyAnalyzer:
             for date in dates:
                 for direction in directions:
                     for variant in self.variants[direction]:
-                        condition = self.condition_summary(direction, variant)
+                        cond_cols = _condition_columns(self.condition_parts(direction, variant))
                         variant_label = self._variant_label(variant)
                         for rr in self.rr_multiples:
                             subset = by_tf_date_dir_variant_rr.get(
@@ -568,7 +621,7 @@ class StrategyAnalyzer:
                                 "timeframe": tf_label,
                                 "date": date,
                                 "direction": direction,
-                                "condition": condition,
+                                **cond_cols,
                                 "variant": variant_label,
                                 "rr_multiple": rr,
                                 "total_setups": total,
@@ -586,13 +639,13 @@ class StrategyAnalyzer:
             tf_label = timeframe_label(tf_seconds)
             for direction in directions:
                 for variant in self.variants[direction]:
-                    condition = self.condition_summary(direction, variant)
+                    cond_cols = _condition_columns(self.condition_parts(direction, variant))
                     variant_label = self._variant_label(variant)
                     count = no_entry_counts.get((tf_seconds, direction, variant_label), 0)
                     row = {
                         "timeframe": tf_label,
                         "direction": direction,
-                        "condition": condition,
+                        **cond_cols,
                         "variant": variant_label,
                         "no_entry_setups": count,
                     }
