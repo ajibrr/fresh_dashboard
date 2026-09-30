@@ -1,0 +1,433 @@
+====================================================================================================
+NIFTY DIRECTIONAL STRATEGY ENGINE - OPTIMIZE RUN
+====================================================================================================
+config            : configs/optimization.json
+mode              : optimize
+input dir         : D:\Git Repo\fresh_dashboard/input data
+file pattern      : NIFTY_*_DASHBOARD.json
+output dir        : D:\Git Repo\fresh_dashboard/output_data/optimize_results
+
+run settings
+  entry rule        : disabled - the trigger candle itself is the entry candle (entry at its close, SL at its low/high)
+  rr multiples      : 2.0 3.0 4.0
+  min setups        : 10
+  num_workers       : 12
+  directions        : LONG SHORT
+
+sweep scope
+  condition group   : rsi_extreme_lookback (LONG)
+    lookback         : 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30
+  condition group   : low_below_bollinger_lower (LONG)
+    bb_period        : 20 22
+    bb_num_std       : 1.5 2
+  condition group   : rsi_extreme_lookback (SHORT)
+    lookback         : 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30
+  condition group   : high_above_bollinger_upper (SHORT)
+    bb_period        : 20 22
+    bb_num_std       : 1.5 2
+  cartesian variants: LONG 120 x SHORT 120 = 240 per timeframe
+WARNING: NIFTY_20260908_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 12sec; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260908_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 1min; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260908_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 3min; every candle is zero-filled. Check the source file's timestamps.
+
+====================================================================================================
+DAY 1 - NIFTY_20260908_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 120
+SHORT variants  : 120
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 0
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_no_data_12sec_1min_3min.xlsx
+WARNING: NIFTY_20260909_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 12sec; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260909_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 1min; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260909_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 3min; every candle is zero-filled. Check the source file's timestamps.
+
+====================================================================================================
+DAY 2 - NIFTY_20260909_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 120
+SHORT variants  : 120
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 0
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_no_data_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 3 - NIFTY_20260910_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 120
+SHORT variants  : 120
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 123
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260910_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 4 - NIFTY_20260911_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 120
+SHORT variants  : 120
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4     lookback    bb_period   bb_num_std
+1     lookback=12, bb_period=20, bb_num_     0.50      10       10      10         0     4.78   0.40   0.50   0.50   0.50 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           12           20          1.5
+2     lookback=13, bb_period=20, bb_num_     0.45      11       11      11         0     4.31   0.46   0.46   0.46   0.46 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           13           20          1.5
+3     lookback=14, bb_period=20, bb_num_     0.42      13       13      12         0     3.90   0.50   0.42   0.42   0.42 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           14           20          1.5
+4     lookback=14, bb_period=22, bb_num_     0.40      10       10      10         0     4.61   0.50   0.40   0.40   0.40 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           14           22          1.5
+5     lookback=15, bb_period=20, bb_num_     0.38      15       15      13         0     3.57   0.54   0.39   0.39   0.39 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           15           20          1.5
+
+no-entry triggers    : 0
+zero-risk skipped    : 73
+eod closes           : 1
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260911_12sec_1min_3min.xlsx
+WARNING: NIFTY_20260914_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 12sec; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260914_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 1min; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260914_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 3min; every candle is zero-filled. Check the source file's timestamps.
+
+====================================================================================================
+DAY 5 - NIFTY_20260914_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 120
+SHORT variants  : 120
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 0
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_no_data_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 6 - NIFTY_20260915_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 120
+SHORT variants  : 120
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4     lookback    bb_period   bb_num_std
+1     lookback=16, bb_period=20, bb_num_     0.50      13       13      12         0     2.48   0.50   0.50   0.50   0.50 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           16           20            2
+2     lookback=17, bb_period=20, bb_num_     0.43      15       15      14         0     1.53   0.57   0.43   0.43   0.43 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           17           20            2
+3     lookback=24, bb_period=20, bb_num_     0.41      23       23      22         0     2.49   0.55   0.41   0.36   0.32 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           24           20            2
+4     lookback=25, bb_period=20, bb_num_     0.41      23       23      22         0     2.49   0.55   0.41   0.36   0.32 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           25           20            2
+5     lookback=26, bb_period=20, bb_num_     0.41      23       23      22         0     2.49   0.55   0.41   0.36   0.32 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           26           20            2
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 64
+eod closes           : 3
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260915_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 7 - NIFTY_20260916_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 120
+SHORT variants  : 120
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 84
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260916_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 8 - NIFTY_20260917_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 120
+SHORT variants  : 120
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4     lookback    bb_period   bb_num_std
+1     lookback=14, bb_period=20, bb_num_     0.60      11       11      10         0     1.19   0.40   0.60   0.50   0.50 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           14           20          1.5
+2     lookback=16, bb_period=20, bb_num_     0.54      14       14      13         0     0.99   0.46   0.54   0.46   0.39 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           16           20          1.5
+3     lookback=15, bb_period=20, bb_num_     0.54      14       14      13         0     0.99   0.46   0.54   0.46   0.39 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           15           20          1.5
+4     lookback=20, bb_period=20, bb_num_     0.53      18       18      15         0     0.94   0.47   0.53   0.47   0.40 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           20           20          1.5
+5     lookback=19, bb_period=20, bb_num_     0.53      17       17      15         0     0.94   0.47   0.53   0.47   0.40 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           19           20          1.5
+
+no-entry triggers    : 0
+zero-risk skipped    : 78
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260917_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 9 - NIFTY_20260918_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 120
+SHORT variants  : 120
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4     lookback    bb_period   bb_num_std
+1     lookback=15, bb_period=20, bb_num_     0.10      12       12      10         0    -1.23   0.90   0.10   0.10   0.10 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           15           20          1.5
+2     lookback=17, bb_period=20, bb_num_     0.10      12       12      10         0    -1.23   0.90   0.10   0.10   0.10 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           17           20          1.5
+3     lookback=16, bb_period=20, bb_num_     0.10      12       12      10         0    -1.23   0.90   0.10   0.10   0.10 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           16           20          1.5
+4     lookback=19, bb_period=20, bb_num_     0.10      12       12      10         0    -1.23   0.90   0.10   0.10   0.10 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           19           20          1.5
+5     lookback=20, bb_period=20, bb_num_     0.10      12       12      10         0    -1.23   0.90   0.10   0.10   0.10 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           20           20          1.5
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 98
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260918_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 10 - NIFTY_20260921_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 120
+SHORT variants  : 120
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4     lookback    bb_period   bb_num_std
+1     lookback=15, bb_period=20, bb_num_     0.36      12       12      11         0     0.55   0.64   0.36   0.36   0.36 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           15           20          1.5
+2     lookback=16, bb_period=20, bb_num_     0.33      13       13      12         0     0.35   0.67   0.33   0.33   0.33 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           16           20          1.5
+3     lookback=18, bb_period=20, bb_num_     0.31      14       14      13         0     0.23   0.69   0.31   0.31   0.31 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           18           20          1.5
+4     lookback=17, bb_period=20, bb_num_     0.31      14       14      13         0     0.23   0.69   0.31   0.31   0.31 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           17           20          1.5
+5     lookback=15, bb_period=22, bb_num_     0.30      10       10      10         0    -0.20   0.70   0.30   0.30   0.30 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           15           22          1.5
+
+no-entry triggers    : 0
+zero-risk skipped    : 90
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260921_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 11 - NIFTY_20260922_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 120
+SHORT variants  : 120
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4     lookback    bb_period   bb_num_std
+1     lookback=20, bb_period=20, bb_num_     0.50      21       21      18         0     3.53   0.50   0.50   0.50   0.33 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           20           20          1.5
+2     lookback=21, bb_period=20, bb_num_     0.47      22       22      19         0     3.22   0.53   0.47   0.47   0.32 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           21           20          1.5
+3     lookback=22, bb_period=20, bb_num_     0.47      22       22      19         0     3.22   0.53   0.47   0.47   0.32 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           22           20          1.5
+4     lookback=23, bb_period=20, bb_num_     0.47      22       22      19         0     3.22   0.53   0.47   0.47   0.32 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           23           20          1.5
+5     lookback=24, bb_period=20, bb_num_     0.47      22       22      19         0     3.22   0.53   0.47   0.47   0.32 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           24           20          1.5
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 115
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260922_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 12 - NIFTY_20260923_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 120
+SHORT variants  : 120
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4     lookback    bb_period   bb_num_std
+1     lookback=20, bb_period=20, bb_num_     0.43      15       15      14         0    -0.01   0.57   0.43   0.29   0.21 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           20           20          1.5
+2     lookback=19, bb_period=20, bb_num_     0.43      15       15      14         0    -0.01   0.57   0.43   0.29   0.21 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           19           20          1.5
+3     lookback=18, bb_period=20, bb_num_     0.43      15       15      14         0    -0.01   0.57   0.43   0.29   0.21 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           18           20          1.5
+4     lookback=17, bb_period=20, bb_num_     0.43      15       15      14         0    -0.01   0.57   0.43   0.29   0.21 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           17           20          1.5
+5     lookback=16, bb_period=20, bb_num_     0.43      15       15      14         0    -0.01   0.57   0.43   0.29   0.21 rsi_extreme_ low_in_sma_b cumulative_o low_below_bo           16           20          1.5
+
+no-entry triggers    : 0
+zero-risk skipped    : 92
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260923_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 13 - NIFTY_20260924_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 120
+SHORT variants  : 120
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4     lookback    bb_period   bb_num_std
+1     lookback=17, bb_period=20, bb_num_     0.50      16       16      10         0     4.94   0.50   0.50   0.40   0.40 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           17           20          1.5
+2     lookback=18, bb_period=20, bb_num_     0.50      16       16      10         0     4.94   0.50   0.50   0.40   0.40 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           18           20          1.5
+3     lookback=19, bb_period=20, bb_num_     0.50      17       17      10         0     4.94   0.50   0.50   0.40   0.40 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           19           20          1.5
+4     lookback=20, bb_period=20, bb_num_     0.50      17       17      10         0     4.94   0.50   0.50   0.40   0.40 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           20           20          1.5
+5     lookback=21, bb_period=20, bb_num_     0.50      17       17      10         0     4.94   0.50   0.50   0.40   0.40 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           21           20          1.5
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 255
+eod closes           : 1
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260924_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 14 - NIFTY_20260925_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 120
+SHORT variants  : 120
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4     lookback    bb_period   bb_num_std
+1     lookback=20, bb_period=22, bb_num_     0.24      18       18      17         0     0.20   0.77   0.23   0.23   0.18 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           20           22          1.5
+2     lookback=20, bb_period=20, bb_num_     0.24      18       18      17         0     0.18   0.77   0.23   0.23   0.18 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           20           20          1.5
+3     lookback=21, bb_period=20, bb_num_     0.24      18       18      17         0     0.18   0.77   0.23   0.23   0.18 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           21           20          1.5
+4     lookback=22, bb_period=20, bb_num_     0.24      18       18      17         0     0.18   0.77   0.23   0.23   0.18 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           22           20          1.5
+5     lookback=23, bb_period=20, bb_num_     0.24      19       19      17         0     0.18   0.77   0.23   0.23   0.18 rsi_extreme_ high_in_sma_ cumulative_o high_above_b           23           20          1.5
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 66
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260925_12sec_1min_3min.xlsx
+
+====================================================================================================
+COMBINED RUN SUMMARY
+====================================================================================================
+files processed         : 14
+variants evaluated      : LONG 120 / SHORT 120
+total triggers          : 8826
+total entries           : 8826
+total trades            : 7688
+no-entry triggers       : 0
+zero-risk skipped       : 1138
+eod closes              : 199
+
+combined best SHORT
+  variant : lookback=16, bb_period=22, bb_num_std=2
+  cond_1           : rsi_extreme_lookback(period=14, side=below, level=30, lookback=16)
+  cond_2           : high_in_sma_band(period=44)
+  cond_3           : cumulative_oi_compare(side=ce_greater)
+  cond_4           : high_above_bollinger_upper(bb_period=22, bb_num_std=2)
+  lookback         : 16
+  bb_period        : 22
+  bb_num_std       : 2
+  hit_rate: 0.412
+  setups  : 19
+  entries : 19
+  trades  : 17
+  no_entry: 0
+  avg_pnl : 4.65
+  stop    : 0.588
+  t1_rate : 0.412
+  t2_rate : 0.412
+  t3_rate : 0.294
+
+near-best SHORT band (within 0.03 of best hit rate, setups >= 10)
+  lookback=16, bb_period=22, bb_num_std=2  hit 0.412  setups 19  avg_pnl 4.65  stop 0.588
+  lookback=25, bb_period=22, bb_num_std=2  hit 0.407  setups 30  avg_pnl 3.42  stop 0.593
+  lookback=25, bb_period=20, bb_num_std=2  hit 0.400  setups 44  avg_pnl 2.52  stop 0.575
+  lookback=17, bb_period=22, bb_num_std=2  hit 0.400  setups 22  avg_pnl 4.14  stop 0.6
+  lookback=18, bb_period=22, bb_num_std=2  hit 0.400  setups 22  avg_pnl 4.14  stop 0.6
+  lookback=16, bb_period=20, bb_num_std=2  hit 0.400  setups 28  avg_pnl 2.66  stop 0.6
+
+combined best LONG
+  variant : lookback=12, bb_period=20, bb_num_std=2
+  cond_1           : rsi_extreme_lookback(period=14, side=above, level=70, lookback=12)
+  cond_2           : low_in_sma_band(period=44)
+  cond_3           : cumulative_oi_compare(side=pe_greater)
+  cond_4           : low_below_bollinger_lower(bb_period=20, bb_num_std=2)
+  lookback         : 12
+  bb_period        : 20
+  bb_num_std       : 2
+  hit_rate: 0.500
+  setups  : 11
+  entries : 11
+  trades  : 10
+  no_entry: 0
+  avg_pnl : 4.3
+  stop    : 0.4
+  t1_rate : 0.5
+  t2_rate : 0.4
+  t3_rate : 0.4
+
+near-best LONG band (within 0.03 of best hit rate, setups >= 10)
+  lookback=12, bb_period=20, bb_num_std=2  hit 0.500  setups 11  avg_pnl 4.3  stop 0.4
+  lookback=11, bb_period=20, bb_num_std=2  hit 0.500  setups 10  avg_pnl 4.3  stop 0.4
+
+what the numbers say
+  - SHORT: best hit rate is not unique — 17 variants sit within 0.03 of the top; the pick is a band, not a single point.
+  - SHORT best variant hit rate spans 100.0 pts across 6 day(s) — day-to-day hit rate varies a lot.
+  - SHORT best variant is stop-heavy (stop rate 0.59).
+  - SHORT top3 day conc : 0.82 (share of the best variant's trades coming from its 3 biggest days).
+  - LONG: best hit rate is not unique — 2 variants sit within 0.03 of the top; the pick is a band, not a single point.
+  - LONG best variant hit rate spans 50.0 pts across 3 day(s) — day-to-day hit rate varies a lot.
+  - LONG top3 day conc : 1.00 (share of the best variant's trades coming from its 3 biggest days).
+
+ranking conclusion
+  primary candidate   : lookback=16, bb_period=22, bb_num_std=2
+    why   : highest SHORT hit rate (0.412) with 17 trades and 4.65 avg pts.
+  secondary candidate : lookback=25, bb_period=22, bb_num_std=2
+    why   : hit rate 0.407, avg P&L 3.42 pts.
+  rejected as final pick: lookback=30, bb_period=20, b (0.38), lookback=30, bb_period=22, b (0.38), lookback=17, bb_period=20, b (0.38)
+  primary candidate   : lookback=12, bb_period=20, bb_num_std=2
+    why   : highest LONG hit rate (0.500) with 10 trades and 4.3 avg pts.
+  secondary candidate : lookback=11, bb_period=20, bb_num_std=2
+    why   : hit rate 0.500, avg P&L 4.3 pts.
+  rejected as final pick: lookback=13, bb_period=20, b (0.45), lookback=12, bb_period=22, b (0.44), lookback=12, bb_period=20, b (0.44)
+
+recommended next step
+  1. freeze the primary candidate (SHORT: lookback=16, bb_period=22, bb_num_std=2, LONG: lookback=12, bb_period=20, bb_num_std=2).
+  2. keep the secondary as a comparison if avg P&L matters more than hit rate.
+  3. confirm the chosen candidate still holds on new days before final.
+
+one-line conclusion
+  Best usable candidates from this cartesian run: SHORT lookback=16, bb_period=22, bb_num_std=2 (hit 0.41, 17 trades, 4.65 avg pts); LONG lookback=12, bb_period=20, bb_num_std=2 (hit 0.50, 10 trades, 4.3 avg pts).
+====================================================================================================
+COMBINED EXCEL: D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_combined_20260930_130805.xlsx
+
+====================================================================================================
+OPTIMIZE MODE COMPLETE: 14/14 file(s) processed
+====================================================================================================

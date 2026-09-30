@@ -1,0 +1,430 @@
+====================================================================================================
+NIFTY DIRECTIONAL STRATEGY ENGINE - OPTIMIZE RUN
+====================================================================================================
+config            : configs/optimization.json
+mode              : optimize
+input dir         : D:\Git Repo\fresh_dashboard/input data
+file pattern      : NIFTY_*_DASHBOARD.json
+output dir        : D:\Git Repo\fresh_dashboard/output_data/optimize_results
+
+run settings
+  entry rule        : disabled - the trigger candle itself is the entry candle (entry at its close, SL at its low/high)
+  rr multiples      : 2.0 3.0 4.0
+  min setups        : 10
+  num_workers       : 12
+  directions        : LONG SHORT
+
+sweep scope
+  condition group   : price_stuck_below_sma (LONG)
+    window_candles   : 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+  condition group   : low_below_bollinger_lower (LONG)
+    bb_period        : 20 22
+    bb_num_std       : 1.5 2
+  condition group   : price_stuck_above_sma (SHORT)
+    window_candles   : 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+  condition group   : high_above_bollinger_upper (SHORT)
+    bb_period        : 20 22
+    bb_num_std       : 1.5 2
+  cartesian variants: LONG 80 x SHORT 80 = 160 per timeframe
+WARNING: NIFTY_20260908_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 12sec; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260908_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 1min; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260908_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 3min; every candle is zero-filled. Check the source file's timestamps.
+
+====================================================================================================
+DAY 1 - NIFTY_20260908_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 0
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_no_data_12sec_1min_3min.xlsx
+WARNING: NIFTY_20260909_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 12sec; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260909_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 1min; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260909_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 3min; every candle is zero-filled. Check the source file's timestamps.
+
+====================================================================================================
+DAY 2 - NIFTY_20260909_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 0
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_no_data_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 3 - NIFTY_20260910_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 28
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260910_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 4 - NIFTY_20260911_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4 window_candl    bb_period   bb_num_std
+1     window_candles=2, bb_period=20, bb     0.36      14       14      14         0     2.56   0.57   0.36   0.36   0.36 price_stuck_ low_in_sma_b cumulative_o low_below_bo            2           20          1.5
+2     window_candles=2, bb_period=22, bb     0.33      15       15      15         0     2.37   0.60   0.33   0.33   0.33 price_stuck_ low_in_sma_b cumulative_o low_below_bo            2           22          1.5
+3     window_candles=1, bb_period=20, bb     0.28      18       18      18         0     1.86   0.67   0.28   0.28   0.28 price_stuck_ low_in_sma_b cumulative_o low_below_bo            1           20          1.5
+4     window_candles=1, bb_period=22, bb     0.28      18       18      18         0     1.86   0.67   0.28   0.28   0.28 price_stuck_ low_in_sma_b cumulative_o low_below_bo            1           22          1.5
+
+no-entry triggers    : 0
+zero-risk skipped    : 4
+eod closes           : 1
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260911_12sec_1min_3min.xlsx
+WARNING: NIFTY_20260914_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 12sec; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260914_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 1min; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260914_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 3min; every candle is zero-filled. Check the source file's timestamps.
+
+====================================================================================================
+DAY 5 - NIFTY_20260914_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 0
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_no_data_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 6 - NIFTY_20260915_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4 window_candl    bb_period   bb_num_std
+1     window_candles=4, bb_period=20, bb     0.45      11       11      11         0     3.35   0.55   0.46   0.36   0.36 price_stuck_ high_in_sma_ cumulative_o high_above_b            4           20            2
+2     window_candles=3, bb_period=20, bb     0.42      13       13      12         0     2.87   0.58   0.42   0.33   0.33 price_stuck_ high_in_sma_ cumulative_o high_above_b            3           20            2
+3     window_candles=2, bb_period=20, bb     0.41      19       19      17         0     2.07   0.59   0.41   0.29   0.29 price_stuck_ high_in_sma_ cumulative_o high_above_b            2           20            2
+4     window_candles=1, bb_period=20, bb     0.38      23       23      21         0     1.56   0.62   0.38   0.29   0.29 price_stuck_ high_in_sma_ cumulative_o high_above_b            1           20            2
+5     window_candles=2, bb_period=22, bb     0.30      11       11      10         0     2.49   0.70   0.30   0.30   0.30 price_stuck_ high_in_sma_ cumulative_o high_above_b            2           22            2
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 17
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260915_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 7 - NIFTY_20260916_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4 window_candl    bb_period   bb_num_std
+1     window_candles=3, bb_period=20, bb     0.10      12       12      10         0    -2.09   0.90   0.10   0.10   0.10 price_stuck_ low_in_sma_b cumulative_o low_below_bo            3           20          1.5
+2     window_candles=2, bb_period=20, bb     0.09      13       13      11         0    -3.35   0.91   0.09   0.09   0.09 price_stuck_ low_in_sma_b cumulative_o low_below_bo            2           20          1.5
+3     window_candles=1, bb_period=20, bb     0.07      17       17      15         0    -2.74   0.93   0.07   0.07   0.07 price_stuck_ low_in_sma_b cumulative_o low_below_bo            1           20          1.5
+4     window_candles=1, bb_period=22, bb     0.00      12       12      11         0    -3.75   1.00   0.00   0.00   0.00 price_stuck_ low_in_sma_b cumulative_o low_below_bo            1           22          1.5
+
+no-entry triggers    : 0
+zero-risk skipped    : 19
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260916_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 8 - NIFTY_20260917_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4 window_candl    bb_period   bb_num_std
+1     window_candles=4, bb_period=20, bb     0.67      13       13      12         0     1.20   0.33   0.67   0.58   0.50 price_stuck_ low_in_sma_b cumulative_o low_below_bo            4           20          1.5
+2     window_candles=3, bb_period=20, bb     0.67      13       13      12         0     1.20   0.33   0.67   0.58   0.50 price_stuck_ low_in_sma_b cumulative_o low_below_bo            3           20          1.5
+3     window_candles=5, bb_period=20, bb     0.60      11       11      10         0     0.91   0.40   0.60   0.50   0.40 price_stuck_ low_in_sma_b cumulative_o low_below_bo            5           20          1.5
+4     window_candles=4, bb_period=22, bb     0.58      13       13      12         0     0.83   0.42   0.58   0.50   0.42 price_stuck_ low_in_sma_b cumulative_o low_below_bo            4           22          1.5
+5     window_candles=3, bb_period=22, bb     0.58      13       13      12         0     0.83   0.42   0.58   0.50   0.42 price_stuck_ low_in_sma_b cumulative_o low_below_bo            3           22          1.5
+
+no-entry triggers    : 0
+zero-risk skipped    : 13
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260917_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 9 - NIFTY_20260918_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4 window_candl    bb_period   bb_num_std
+1     window_candles=1, bb_period=20, bb     0.15      22       22      20         0    -0.96   0.85   0.15   0.10   0.10 price_stuck_ high_in_sma_ cumulative_o high_above_b            1           20          1.5
+2     window_candles=1, bb_period=22, bb     0.08      15       15      13         0    -1.11   0.92   0.08   0.00   0.00 price_stuck_ high_in_sma_ cumulative_o high_above_b            1           22          1.5
+3     window_candles=2, bb_period=20, bb     0.07      15       15      14         0    -1.08   0.93   0.07   0.07   0.07 price_stuck_ high_in_sma_ cumulative_o high_above_b            2           20          1.5
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 16
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260918_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 10 - NIFTY_20260921_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4 window_candl    bb_period   bb_num_std
+1     window_candles=2, bb_period=22, bb     0.27      13       13      11         0    -0.70   0.73   0.27   0.27   0.27 price_stuck_ low_in_sma_b cumulative_o low_below_bo            2           22          1.5
+2     window_candles=2, bb_period=20, bb     0.27      14       14      11         0    -0.70   0.73   0.27   0.27   0.27 price_stuck_ low_in_sma_b cumulative_o low_below_bo            2           20          1.5
+3     window_candles=1, bb_period=22, bb     0.24      19       19      17         0    -0.77   0.77   0.23   0.18   0.18 price_stuck_ low_in_sma_b cumulative_o low_below_bo            1           22          1.5
+4     window_candles=1, bb_period=20, bb     0.24      20       20      17         0    -0.77   0.77   0.23   0.18   0.18 price_stuck_ low_in_sma_b cumulative_o low_below_bo            1           20          1.5
+
+no-entry triggers    : 0
+zero-risk skipped    : 31
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260921_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 11 - NIFTY_20260922_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4 window_candl    bb_period   bb_num_std
+1     window_candles=3, bb_period=20, bb     0.46      15       15      13         0     3.83   0.54   0.46   0.46   0.31 price_stuck_ high_in_sma_ cumulative_o high_above_b            3           20          1.5
+2     window_candles=2, bb_period=20, bb     0.39      21       21      18         0     2.39   0.61   0.39   0.39   0.28 price_stuck_ high_in_sma_ cumulative_o high_above_b            2           20          1.5
+3     window_candles=3, bb_period=22, bb     0.36      12       12      11         0     3.96   0.64   0.36   0.36   0.27 price_stuck_ high_in_sma_ cumulative_o high_above_b            3           22          1.5
+4     window_candles=1, bb_period=20, bb     0.35      26       26      23         0     1.92   0.65   0.35   0.35   0.22 price_stuck_ high_in_sma_ cumulative_o high_above_b            1           20          1.5
+5     window_candles=1, bb_period=22, bb     0.31      18       18      16         0     2.71   0.69   0.31   0.31   0.19 price_stuck_ high_in_sma_ cumulative_o high_above_b            1           22          1.5
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 23
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260922_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 12 - NIFTY_20260923_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4 window_candl    bb_period   bb_num_std
+1     window_candles=1, bb_period=20, bb     0.38      24       24      21         0     0.02   0.62   0.38   0.29   0.24 price_stuck_ low_in_sma_b cumulative_o low_below_bo            1           20          1.5
+2     window_candles=5, bb_period=22, bb     0.36      12       12      11         0     0.24   0.64   0.36   0.27   0.27 price_stuck_ low_in_sma_b cumulative_o low_below_bo            5           22          1.5
+3     window_candles=5, bb_period=20, bb     0.36      12       12      11         0     0.24   0.64   0.36   0.27   0.27 price_stuck_ low_in_sma_b cumulative_o low_below_bo            5           20          1.5
+4     window_candles=3, bb_period=20, bb     0.36      16       16      14         0     0.22   0.64   0.36   0.21   0.21 price_stuck_ low_in_sma_b cumulative_o low_below_bo            3           20          1.5
+5     window_candles=1, bb_period=22, bb     0.35      20       20      17         0    -0.07   0.65   0.35   0.29   0.23 price_stuck_ low_in_sma_b cumulative_o low_below_bo            1           22          1.5
+
+no-entry triggers    : 0
+zero-risk skipped    : 40
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260923_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 13 - NIFTY_20260924_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4 window_candl    bb_period   bb_num_std
+1     window_candles=1, bb_period=22, bb     0.50      18       18      14         0     3.55   0.50   0.50   0.43   0.43 price_stuck_ high_in_sma_ cumulative_o high_above_b            1           22          1.5
+2     window_candles=2, bb_period=22, bb     0.46      15       15      13         0     3.66   0.54   0.46   0.39   0.39 price_stuck_ high_in_sma_ cumulative_o high_above_b            2           22          1.5
+3     window_candles=1, bb_period=20, bb     0.41      22       22      17         0     2.95   0.59   0.41   0.35   0.35 price_stuck_ high_in_sma_ cumulative_o high_above_b            1           20          1.5
+4     window_candles=2, bb_period=20, bb     0.40      17       17      15         0     3.21   0.60   0.40   0.33   0.33 price_stuck_ high_in_sma_ cumulative_o high_above_b            2           20          1.5
+5     window_candles=4, bb_period=20, bb     0.40      11       11      10         0     4.59   0.60   0.40   0.30   0.30 price_stuck_ high_in_sma_ cumulative_o high_above_b            4           20          1.5
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 20
+eod closes           : 1
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260924_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 14 - NIFTY_20260925_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4 window_candl    bb_period   bb_num_std
+1     window_candles=1, bb_period=22, bb     0.14      16       16      14         0     0.02   0.86   0.14   0.14   0.14 price_stuck_ high_in_sma_ cumulative_o high_above_b            1           22          1.5
+2     window_candles=1, bb_period=20, bb     0.14      16       16      14         0    -0.12   0.86   0.14   0.14   0.14 price_stuck_ high_in_sma_ cumulative_o high_above_b            1           20          1.5
+3     window_candles=2, bb_period=20, bb     0.10      10       10      10         0    -0.45   0.90   0.10   0.10   0.10 price_stuck_ high_in_sma_ cumulative_o high_above_b            2           20          1.5
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 4
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260925_12sec_1min_3min.xlsx
+
+====================================================================================================
+COMBINED RUN SUMMARY
+====================================================================================================
+files processed         : 14
+variants evaluated      : LONG 80 / SHORT 80
+total triggers          : 2043
+total entries           : 2043
+total trades            : 1828
+no-entry triggers       : 0
+zero-risk skipped       : 215
+eod closes              : 26
+
+combined best SHORT
+  variant : window_candles=4, bb_period=20, bb_num_std=2
+  cond_1           : price_stuck_above_sma(period=9, window_candles=4, skip_recent=1)
+  cond_2           : high_in_sma_band(period=44)
+  cond_3           : cumulative_oi_compare(side=ce_greater)
+  cond_4           : high_above_bollinger_upper(bb_period=20, bb_num_std=2)
+  window_candles   : 4
+  bb_period        : 20
+  bb_num_std       : 2
+  hit_rate: 0.429
+  setups  : 14
+  entries : 14
+  trades  : 14
+  no_entry: 0
+  avg_pnl : 2.97
+  stop    : 0.571
+  t1_rate : 0.429
+  t2_rate : 0.357
+  t3_rate : 0.357
+
+near-best SHORT band (within 0.03 of best hit rate, setups >= 10)
+  window_candles=4, bb_period=20, bb_num_s hit 0.429  setups 14  avg_pnl 2.97  stop 0.571
+  window_candles=3, bb_period=20, bb_num_s hit 0.400  setups 21  avg_pnl 3.56  stop 0.6
+  window_candles=4, bb_period=22, bb_num_s hit 0.400  setups 10  avg_pnl 3.72  stop 0.6
+  window_candles=5, bb_period=20, bb_num_s hit 0.400  setups 10  avg_pnl 2.34  stop 0.6
+
+combined best LONG
+  variant : window_candles=7, bb_period=20, bb_num_std=1.5
+  cond_1           : price_stuck_below_sma(period=9, window_candles=7, skip_recent=1)
+  cond_2           : low_in_sma_band(period=44)
+  cond_3           : cumulative_oi_compare(side=pe_greater)
+  cond_4           : low_below_bollinger_lower(bb_period=20, bb_num_std=1.5)
+  window_candles   : 7
+  bb_period        : 20
+  bb_num_std       : 1.5
+  hit_rate: 0.461
+  setups  : 15
+  entries : 15
+  trades  : 13
+  no_entry: 0
+  avg_pnl : 0.17
+  stop    : 0.538
+  t1_rate : 0.462
+  t2_rate : 0.385
+  t3_rate : 0.308
+
+near-best LONG band (within 0.03 of best hit rate, setups >= 10)
+  window_candles=7, bb_period=20, bb_num_s hit 0.461  setups 15  avg_pnl 0.17  stop 0.538
+
+what the numbers say
+  - SHORT: best hit rate is not unique — 4 variants sit within 0.03 of the top; the pick is a band, not a single point.
+  - SHORT best variant hit rate spans 50.0 pts across 3 day(s) — day-to-day hit rate varies a lot.
+  - SHORT best variant is stop-heavy (stop rate 0.57).
+  - SHORT: runner-up 'window_candles=3, bb_period=20, bb_num_s' has higher avg P&L (3.56 vs 2.97 pts) at hit rate 0.40.
+  - SHORT top3 day conc : 1.00 (share of the best variant's trades coming from its 3 biggest days).
+  - LONG: one variant clearly leads the sweep.
+  - LONG best variant hit rate spans 66.7 pts across 4 day(s) — day-to-day hit rate varies a lot.
+  - LONG best variant is stop-heavy (stop rate 0.54).
+  - LONG top3 day conc : 0.92 (share of the best variant's trades coming from its 3 biggest days).
+
+ranking conclusion
+  primary candidate   : window_candles=4, bb_period=20, bb_num_std=2
+    why   : highest SHORT hit rate (0.429) with 14 trades and 2.97 avg pts.
+  secondary candidate : window_candles=3, bb_period=20, bb_num_std=2
+    why   : hit rate 0.400, avg P&L 3.56 pts.
+  rejected as final pick: window_candles=3, bb_period= (0.38), window_candles=2, bb_period= (0.37), window_candles=1, bb_period= (0.35)
+  primary candidate   : window_candles=7, bb_period=20, bb_num_std=1.5
+    why   : highest LONG hit rate (0.461) with 13 trades and 0.17 avg pts.
+  secondary candidate : window_candles=7, bb_period=22, bb_num_std=1.5
+    why   : hit rate 0.429, avg P&L 0.11 pts.
+  rejected as final pick: window_candles=7, bb_period= (0.43), window_candles=6, bb_period= (0.43), window_candles=6, bb_period= (0.43)
+
+recommended next step
+  1. freeze the primary candidate (SHORT: window_candles=4, bb_period=20, bb_num_std=2, LONG: window_candles=7, bb_period=20, bb_num_std=1.5).
+  2. keep the secondary as a comparison if avg P&L matters more than hit rate.
+  3. confirm the chosen candidate still holds on new days before final.
+
+one-line conclusion
+  Best usable candidates from this cartesian run: SHORT window_candles=4, bb_period=20, bb_num_std=2 (hit 0.43, 14 trades, 2.97 avg pts); LONG window_candles=7, bb_period=20, bb_num_std=1.5 (hit 0.46, 13 trades, 0.17 avg pts).
+====================================================================================================
+COMBINED EXCEL: D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_combined_20260930_131814.xlsx
+
+====================================================================================================
+OPTIMIZE MODE COMPLETE: 14/14 file(s) processed
+====================================================================================================

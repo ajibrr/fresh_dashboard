@@ -1,0 +1,390 @@
+====================================================================================================
+NIFTY DIRECTIONAL STRATEGY ENGINE - OPTIMIZE RUN
+====================================================================================================
+config            : configs/optimization.json
+mode              : optimize
+input dir         : D:\Git Repo\fresh_dashboard/input data
+file pattern      : NIFTY_*_DASHBOARD.json
+output dir        : D:\Git Repo\fresh_dashboard/output_data/optimize_results
+
+run settings
+  entry rule        : disabled - the trigger candle itself is the entry candle (entry at its close, SL at its low/high)
+  rr multiples      : 2.0 3.0 4.0
+  min setups        : 100
+  num_workers       : 12
+  directions        : LONG SHORT
+
+sweep scope
+  condition group   : rsi_below_signal_lookback (LONG)
+    signal_window_candles: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+  condition group   : low_below_bollinger_lower (LONG)
+    bb_period        : 20 22
+    bb_num_std       : 1.5 2
+  condition group   : rsi_above_signal_lookback (SHORT)
+    signal_window_candles: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+  condition group   : high_above_bollinger_upper (SHORT)
+    bb_period        : 20 22
+    bb_num_std       : 1.5 2
+  cartesian variants: LONG 80 x SHORT 80 = 160 per timeframe
+WARNING: NIFTY_20260908_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 12sec; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260908_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 1min; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260908_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 3min; every candle is zero-filled. Check the source file's timestamps.
+
+====================================================================================================
+DAY 1 - NIFTY_20260908_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 100) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 100) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 0
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_no_data_12sec_1min_3min.xlsx
+WARNING: NIFTY_20260909_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 12sec; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260909_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 1min; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260909_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 3min; every candle is zero-filled. Check the source file's timestamps.
+
+====================================================================================================
+DAY 2 - NIFTY_20260909_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 100) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 100) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 0
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_no_data_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 3 - NIFTY_20260910_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 100) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 100) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 51
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260910_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 4 - NIFTY_20260911_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 100) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 100) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 43
+eod closes           : 1
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260911_12sec_1min_3min.xlsx
+WARNING: NIFTY_20260914_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 12sec; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260914_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 1min; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_20260914_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 3min; every candle is zero-filled. Check the source file's timestamps.
+
+====================================================================================================
+DAY 5 - NIFTY_20260914_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 100) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 100) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 0
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_no_data_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 6 - NIFTY_20260915_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 100) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 100) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 59
+eod closes           : 3
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260915_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 7 - NIFTY_20260916_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 100) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 100) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 38
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260916_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 8 - NIFTY_20260917_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 100) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 100) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 52
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260917_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 9 - NIFTY_20260918_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 100) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 100) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 50
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260918_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 10 - NIFTY_20260921_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 100) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 100) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 156
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260921_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 11 - NIFTY_20260922_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 100) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 100) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 115
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260922_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 12 - NIFTY_20260923_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 100) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 100) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 72
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260923_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 13 - NIFTY_20260924_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 100) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 100) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 144
+eod closes           : 1
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260924_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 14 - NIFTY_20260925_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 80
+SHORT variants  : 80
+
+--- SHORT top variants (by hit rate, min setups 100) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 100) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 42
+eod closes           : 0
+daily report         : D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_results_20260925_12sec_1min_3min.xlsx
+
+====================================================================================================
+COMBINED RUN SUMMARY
+====================================================================================================
+files processed         : 14
+variants evaluated      : LONG 80 / SHORT 80
+total triggers          : 6381
+total entries           : 6381
+total trades            : 5559
+no-entry triggers       : 0
+zero-risk skipped       : 822
+eod closes              : 111
+
+combined best SHORT
+  variant : signal_window_candles=6, bb_period=20, bb_num_std=1.5
+  cond_1           : rsi_above_signal_lookback(period=14, signal_period=14, signal_window_candles=6, skip_recent=1)
+  cond_2           : high_in_sma_band(period=44)
+  cond_3           : cumulative_oi_compare(side=ce_greater)
+  cond_4           : high_above_bollinger_upper(bb_period=20, bb_num_std=1.5)
+  signal_window_candles: 6
+  bb_period        : 20
+  bb_num_std       : 1.5
+  hit_rate: 0.301
+  setups  : 116
+  entries : 116
+  trades  : 103
+  no_entry: 0
+  avg_pnl : 1.52
+  stop    : 0.699
+  t1_rate : 0.301
+  t2_rate : 0.272
+  t3_rate : 0.233
+
+near-best SHORT band (within 0.03 of best hit rate, setups >= 100)
+  signal_window_candles=6, bb_period=20, b hit 0.301  setups 116  avg_pnl 1.52  stop 0.699
+  signal_window_candles=5, bb_period=20, b hit 0.286  setups 128  avg_pnl 1.44  stop 0.714
+  signal_window_candles=1, bb_period=22, b hit 0.273  setups 149  avg_pnl 1.19  stop 0.719
+  signal_window_candles=2, bb_period=22, b hit 0.273  setups 139  avg_pnl 1.12  stop 0.719
+  signal_window_candles=2, bb_period=20, b hit 0.271  setups 176  avg_pnl 0.78  stop 0.723
+
+combined best LONG
+  variant : signal_window_candles=4, bb_period=20, bb_num_std=1.5
+  cond_1           : rsi_below_signal_lookback(period=14, signal_period=14, signal_window_candles=4, skip_recent=1)
+  cond_2           : low_in_sma_band(period=44)
+  cond_3           : cumulative_oi_compare(side=pe_greater)
+  cond_4           : low_below_bollinger_lower(bb_period=20, bb_num_std=1.5)
+  signal_window_candles: 4
+  bb_period        : 20
+  bb_num_std       : 1.5
+  hit_rate: 0.324
+  setups  : 120
+  entries : 120
+  trades  : 102
+  no_entry: 0
+  avg_pnl : 0.07
+  stop    : 0.667
+  t1_rate : 0.324
+  t2_rate : 0.275
+  t3_rate : 0.235
+
+near-best LONG band (within 0.03 of best hit rate, setups >= 100)
+  signal_window_candles=4, bb_period=20, b hit 0.324  setups 120  avg_pnl 0.07  stop 0.667
+  signal_window_candles=3, bb_period=20, b hit 0.308  setups 138  avg_pnl -0.11  stop 0.683
+  signal_window_candles=1, bb_period=20, b hit 0.299  setups 159  avg_pnl -0.25  stop 0.693
+  signal_window_candles=2, bb_period=20, b hit 0.299  setups 146  avg_pnl -0.16  stop 0.693
+
+what the numbers say
+  - SHORT: best hit rate is not unique — 5 variants sit within 0.03 of the top; the pick is a band, not a single point.
+  - SHORT best variant hit rate spans 50.0 pts across 7 day(s) — day-to-day hit rate varies a lot.
+  - SHORT best variant is stop-heavy (stop rate 0.70).
+  - SHORT top3 day conc : 0.73 (share of the best variant's trades coming from its 3 biggest days).
+  - LONG: best hit rate is not unique — 4 variants sit within 0.03 of the top; the pick is a band, not a single point.
+  - LONG best variant hit rate spans 48.1 pts across 6 day(s) — day-to-day hit rate varies a lot.
+  - LONG best variant is stop-heavy (stop rate 0.67).
+  - LONG top3 day conc : 0.66 (share of the best variant's trades coming from its 3 biggest days).
+
+ranking conclusion
+  primary candidate   : signal_window_candles=6, bb_period=20, bb_num_std=1.5
+    why   : highest SHORT hit rate (0.301) with 103 trades and 1.52 avg pts.
+  secondary candidate : signal_window_candles=5, bb_period=20, bb_num_std=1.5
+    why   : hit rate 0.286, avg P&L 1.44 pts.
+  rejected as final pick: signal_window_candles=1, bb_ (0.27), signal_window_candles=4, bb_ (0.27), signal_window_candles=3, bb_ (0.27)
+  primary candidate   : signal_window_candles=4, bb_period=20, bb_num_std=1.5
+    why   : highest LONG hit rate (0.324) with 102 trades and 0.07 avg pts.
+  secondary candidate : signal_window_candles=3, bb_period=20, bb_num_std=1.5
+    why   : hit rate 0.308, avg P&L -0.11 pts.
+  rejected as final pick: signal_window_candles=3, bb_ (0.27), signal_window_candles=1, bb_ (0.26), signal_window_candles=2, bb_ (0.26)
+
+recommended next step
+  1. freeze the primary candidate (SHORT: signal_window_candles=6, bb_period=20, bb_num_std=1.5, LONG: signal_window_candles=4, bb_period=20, bb_num_std=1.5).
+  2. keep the secondary as a comparison if avg P&L matters more than hit rate.
+  3. confirm the chosen candidate still holds on new days before final.
+
+one-line conclusion
+  Best usable candidates from this cartesian run: SHORT signal_window_candles=6, bb_period=20, bb_num_std=1.5 (hit 0.30, 103 trades, 1.52 avg pts); LONG signal_window_candles=4, bb_period=20, bb_num_std=1.5 (hit 0.32, 102 trades, 0.07 avg pts).
+====================================================================================================
+COMBINED EXCEL: D:\Git Repo\fresh_dashboard\output_data\optimize_results\optimize_combined_20260930_133631.xlsx
+
+====================================================================================================
+OPTIMIZE MODE COMPLETE: 14/14 file(s) processed
+====================================================================================================
