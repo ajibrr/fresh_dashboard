@@ -1,0 +1,443 @@
+====================================================================================================
+NIFTY DIRECTIONAL STRATEGY ENGINE - OPTIMIZE RUN
+====================================================================================================
+config            : configs/optimization.json
+mode              : optimize
+input dir         : D:/Git/fresh_dashboard/app/data
+file pattern      : NIFTY_*_DASHBOARD.json
+output dir        : D:/Git/fresh_dashboard/app/data/optimize_results
+
+run settings
+  entry rule        : disabled - the trigger candle itself is the entry candle (entry at its close, SL at its low/high)
+  rr multiples      : 2.0 3.0 4.0
+  min setups        : 10
+  num_workers       : 14
+  directions        : LONG SHORT
+
+sweep scope
+  condition group   : sma_rising_atr (LONG)
+    candles          : 3 5 7 9
+    atr_multiplier   : 0.0 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1 0.11 0.12 0.13 0.14 0.15 0.16 0.17 0.18 0.19 0.2 0.21 0.22 0.23 0.24 0.25 0.26 0.27 0.28 0.29 0.3 0.31 0.32 0.33 0.34 0.35 0.36 0.37 0.38 0.39 0.4 0.41 0.42 0.43 0.44 0.45 0.46 0.47 0.48 0.49 0.5
+  condition group   : low_below_bollinger_lower (LONG)
+    bb_period        : 20 22
+    bb_num_std       : 1.5 2
+  condition group   : sma_falling_atr (SHORT)
+    candles          : 3 5 7 9
+    atr_multiplier   : 0.0 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1 0.11 0.12 0.13 0.14 0.15 0.16 0.17 0.18 0.19 0.2 0.21 0.22 0.23 0.24 0.25 0.26 0.27 0.28 0.29 0.3 0.31 0.32 0.33 0.34 0.35 0.36 0.37 0.38 0.39 0.4 0.41 0.42 0.43 0.44 0.45 0.46 0.47 0.48 0.49 0.5
+  condition group   : high_above_bollinger_upper (SHORT)
+    bb_period        : 20 22
+    bb_num_std       : 1.5 2
+  cartesian variants: LONG 816 x SHORT 816 = 1632 per timeframe
+WARNING: NIFTY_2026-09-08_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 12sec; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_2026-09-08_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 1min; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_2026-09-08_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 3min; every candle is zero-filled. Check the source file's timestamps.
+
+====================================================================================================
+DAY 1 - NIFTY_2026-09-08_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 816
+SHORT variants  : 816
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 0
+eod closes           : 0
+daily report         : D:\Git\fresh_dashboard\app\data\optimize_results\optimize_results_no_data_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 2 - NIFTY_2026-09-10_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 816
+SHORT variants  : 816
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 1252
+eod closes           : 0
+daily report         : D:\Git\fresh_dashboard\app\data\optimize_results\optimize_results_20260910_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 3 - NIFTY_2026-09-11_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 816
+SHORT variants  : 816
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4      candles atr_multipli    bb_period   bb_num_std
+1     candles=7, atr_multiplier=0.34, bb     0.64      13       13      11         0     4.99   0.27   0.64   0.64   0.64 sma_rising_a low_in_sma_b cumulative_o low_below_bo            7         0.34           20          1.5
+2     candles=3, atr_multiplier=0.21, bb     0.60      11       11      10         0     5.40   0.30   0.60   0.60   0.60 sma_rising_a low_in_sma_b cumulative_o low_below_bo            3         0.21           22          1.5
+3     candles=5, atr_multiplier=0.31, bb     0.60      12       12      10         0     5.37   0.30   0.60   0.60   0.60 sma_rising_a low_in_sma_b cumulative_o low_below_bo            5         0.31           20          1.5
+4     candles=5, atr_multiplier=0.33, bb     0.60      12       12      10         0     5.37   0.30   0.60   0.60   0.60 sma_rising_a low_in_sma_b cumulative_o low_below_bo            5         0.33           20          1.5
+5     candles=5, atr_multiplier=0.32, bb     0.60      12       12      10         0     5.37   0.30   0.60   0.60   0.60 sma_rising_a low_in_sma_b cumulative_o low_below_bo            5         0.32           20          1.5
+
+no-entry triggers    : 0
+zero-risk skipped    : 751
+eod closes           : 1
+daily report         : D:\Git\fresh_dashboard\app\data\optimize_results\optimize_results_20260911_12sec_1min_3min.xlsx
+WARNING: NIFTY_2026-09-14_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 12sec; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_2026-09-14_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 1min; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_2026-09-14_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 3min; every candle is zero-filled. Check the source file's timestamps.
+
+====================================================================================================
+DAY 4 - NIFTY_2026-09-14_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 816
+SHORT variants  : 816
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 0
+eod closes           : 0
+daily report         : D:\Git\fresh_dashboard\app\data\optimize_results\optimize_results_no_data_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 5 - NIFTY_2026-09-15_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 816
+SHORT variants  : 816
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4      candles atr_multipli    bb_period   bb_num_std
+1     candles=3, atr_multiplier=0.31, bb     0.55      11       11      11         0     3.21   0.46   0.55   0.55   0.55 sma_falling_ high_in_sma_ cumulative_o high_above_b            3         0.31           20            2
+2     candles=3, atr_multiplier=0.32, bb     0.55      11       11      11         0     3.21   0.46   0.55   0.55   0.55 sma_falling_ high_in_sma_ cumulative_o high_above_b            3         0.32           20            2
+3     candles=3, atr_multiplier=0.4, bb_     0.50      10       10      10         0     3.35   0.50   0.50   0.50   0.50 sma_falling_ high_in_sma_ cumulative_o high_above_b            3          0.4           22          1.5
+4     candles=3, atr_multiplier=0.41, bb     0.50      10       10      10         0     3.35   0.50   0.50   0.50   0.50 sma_falling_ high_in_sma_ cumulative_o high_above_b            3         0.41           22          1.5
+5     candles=5, atr_multiplier=0.43, bb     0.47      17       17      15         0     2.89   0.53   0.47   0.47   0.47 sma_falling_ high_in_sma_ cumulative_o high_above_b            5         0.43           20            2
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 1284
+eod closes           : 3
+daily report         : D:\Git\fresh_dashboard\app\data\optimize_results\optimize_results_20260915_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 6 - NIFTY_2026-09-16_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 816
+SHORT variants  : 816
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4      candles atr_multipli    bb_period   bb_num_std
+1     candles=7, atr_multiplier=0.35, bb     0.25      15       15      12         0     0.43   0.75   0.25   0.25   0.25 sma_rising_a low_in_sma_b cumulative_o low_below_bo            7         0.35           20          1.5
+2     candles=9, atr_multiplier=0.49, bb     0.25      15       15      12         0     0.43   0.75   0.25   0.25   0.25 sma_rising_a low_in_sma_b cumulative_o low_below_bo            9         0.49           20          1.5
+3     candles=9, atr_multiplier=0.5, bb_     0.25      15       15      12         0     0.43   0.75   0.25   0.25   0.25 sma_rising_a low_in_sma_b cumulative_o low_below_bo            9          0.5           20          1.5
+4     candles=9, atr_multiplier=0.48, bb     0.25      15       15      12         0     0.43   0.75   0.25   0.25   0.25 sma_rising_a low_in_sma_b cumulative_o low_below_bo            9         0.48           20          1.5
+5     candles=7, atr_multiplier=0.24, bb     0.23      16       16      13         0     0.28   0.77   0.23   0.23   0.23 sma_rising_a low_in_sma_b cumulative_o low_below_bo            7         0.24           20          1.5
+
+no-entry triggers    : 0
+zero-risk skipped    : 1106
+eod closes           : 0
+daily report         : D:\Git\fresh_dashboard\app\data\optimize_results\optimize_results_20260916_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 7 - NIFTY_2026-09-17_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 816
+SHORT variants  : 816
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4      candles atr_multipli    bb_period   bb_num_std
+1     candles=3, atr_multiplier=0.1, bb_     0.47      22       22      19         0     0.58   0.53   0.47   0.42   0.37 sma_rising_a low_in_sma_b cumulative_o low_below_bo            3          0.1           20          1.5
+2     candles=3, atr_multiplier=0.09, bb     0.47      22       22      19         0     0.58   0.53   0.47   0.42   0.37 sma_rising_a low_in_sma_b cumulative_o low_below_bo            3         0.09           20          1.5
+3     candles=3, atr_multiplier=0.06, bb     0.45      23       23      20         0     0.48   0.55   0.45   0.40   0.35 sma_rising_a low_in_sma_b cumulative_o low_below_bo            3         0.06           20          1.5
+4     candles=3, atr_multiplier=0.08, bb     0.45      23       23      20         0     0.48   0.55   0.45   0.40   0.35 sma_rising_a low_in_sma_b cumulative_o low_below_bo            3         0.08           20          1.5
+5     candles=3, atr_multiplier=0.07, bb     0.45      23       23      20         0     0.48   0.55   0.45   0.40   0.35 sma_rising_a low_in_sma_b cumulative_o low_below_bo            3         0.07           20          1.5
+
+no-entry triggers    : 0
+zero-risk skipped    : 864
+eod closes           : 0
+daily report         : D:\Git\fresh_dashboard\app\data\optimize_results\optimize_results_20260917_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 8 - NIFTY_2026-09-18_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 816
+SHORT variants  : 816
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4      candles atr_multipli    bb_period   bb_num_std
+1     candles=5, atr_multiplier=0.08, bb     0.17      28       28      23         0    -0.25   0.83   0.17   0.13   0.09 sma_falling_ high_in_sma_ cumulative_o high_above_b            5         0.08           20          1.5
+2     candles=5, atr_multiplier=0.07, bb     0.17      29       29      24         0    -0.27   0.83   0.17   0.12   0.08 sma_falling_ high_in_sma_ cumulative_o high_above_b            5         0.07           20          1.5
+3     candles=3, atr_multiplier=0.04, bb     0.17      30       30      24         0    -0.29   0.83   0.17   0.12   0.08 sma_falling_ high_in_sma_ cumulative_o high_above_b            3         0.04           20          1.5
+4     candles=3, atr_multiplier=0.05, bb     0.17      29       29      24         0    -0.29   0.83   0.17   0.12   0.08 sma_falling_ high_in_sma_ cumulative_o high_above_b            3         0.05           20          1.5
+5     candles=3, atr_multiplier=0.03, bb     0.17      30       30      24         0    -0.29   0.83   0.17   0.12   0.08 sma_falling_ high_in_sma_ cumulative_o high_above_b            3         0.03           20          1.5
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 1919
+eod closes           : 0
+daily report         : D:\Git\fresh_dashboard\app\data\optimize_results\optimize_results_20260918_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 9 - NIFTY_2026-09-21_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 816
+SHORT variants  : 816
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4      candles atr_multipli    bb_period   bb_num_std
+1     candles=5, atr_multiplier=0.31, bb     0.26      24       24      19         0    -0.27   0.74   0.26   0.21   0.21 sma_rising_a low_in_sma_b cumulative_o low_below_bo            5         0.31           20          1.5
+2     candles=5, atr_multiplier=0.3, bb_     0.26      24       24      19         0    -0.27   0.74   0.26   0.21   0.21 sma_rising_a low_in_sma_b cumulative_o low_below_bo            5          0.3           20          1.5
+3     candles=5, atr_multiplier=0.32, bb     0.26      24       24      19         0    -0.27   0.74   0.26   0.21   0.21 sma_rising_a low_in_sma_b cumulative_o low_below_bo            5         0.32           20          1.5
+4     candles=5, atr_multiplier=0.33, bb     0.26      24       24      19         0    -0.27   0.74   0.26   0.21   0.21 sma_rising_a low_in_sma_b cumulative_o low_below_bo            5         0.33           20          1.5
+5     candles=7, atr_multiplier=0.45, bb     0.26      23       23      19         0    -0.28   0.74   0.26   0.21   0.21 sma_rising_a low_in_sma_b cumulative_o low_below_bo            7         0.45           20          1.5
+
+no-entry triggers    : 0
+zero-risk skipped    : 2599
+eod closes           : 0
+daily report         : D:\Git\fresh_dashboard\app\data\optimize_results\optimize_results_20260921_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 10 - NIFTY_2026-09-22_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 816
+SHORT variants  : 816
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4      candles atr_multipli    bb_period   bb_num_std
+1     candles=5, atr_multiplier=0.43, bb     0.64      14       14      11         0     5.05   0.36   0.64   0.64   0.36 sma_falling_ high_in_sma_ cumulative_o high_above_b            5         0.43           20          1.5
+2     candles=5, atr_multiplier=0.44, bb     0.64      14       14      11         0     5.05   0.36   0.64   0.64   0.36 sma_falling_ high_in_sma_ cumulative_o high_above_b            5         0.44           20          1.5
+3     candles=5, atr_multiplier=0.4, bb_     0.62      16       16      13         0     4.67   0.39   0.61   0.61   0.39 sma_falling_ high_in_sma_ cumulative_o high_above_b            5          0.4           20          1.5
+4     candles=5, atr_multiplier=0.37, bb     0.60      19       19      15         0     4.49   0.40   0.60   0.60   0.40 sma_falling_ high_in_sma_ cumulative_o high_above_b            5         0.37           20          1.5
+5     candles=5, atr_multiplier=0.45, bb     0.60      13       13      10         0     5.22   0.40   0.60   0.60   0.40 sma_falling_ high_in_sma_ cumulative_o high_above_b            5         0.45           20          1.5
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 2436
+eod closes           : 0
+daily report         : D:\Git\fresh_dashboard\app\data\optimize_results\optimize_results_20260922_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 11 - NIFTY_2026-09-23_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 816
+SHORT variants  : 816
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4      candles atr_multipli    bb_period   bb_num_std
+1     candles=3, atr_multiplier=0.01, bb     0.52      27       27      23         0     0.71   0.48   0.52   0.39   0.30 sma_rising_a low_in_sma_b cumulative_o low_below_bo            3         0.01           22          1.5
+2     candles=3, atr_multiplier=0.0, bb_     0.52      27       27      23         0     0.71   0.48   0.52   0.39   0.30 sma_rising_a low_in_sma_b cumulative_o low_below_bo            3          0.0           22          1.5
+3     candles=3, atr_multiplier=0.01, bb     0.52      29       29      25         0     0.69   0.48   0.52   0.36   0.28 sma_rising_a low_in_sma_b cumulative_o low_below_bo            3         0.01           20          1.5
+4     candles=3, atr_multiplier=0.0, bb_     0.52      31       31      27         0     0.62   0.48   0.52   0.37   0.30 sma_rising_a low_in_sma_b cumulative_o low_below_bo            3          0.0           20          1.5
+5     candles=3, atr_multiplier=0.07, bb     0.50      28       28      24         0     0.58   0.50   0.50   0.33   0.25 sma_rising_a low_in_sma_b cumulative_o low_below_bo            3         0.07           20          1.5
+
+no-entry triggers    : 0
+zero-risk skipped    : 1858
+eod closes           : 0
+daily report         : D:\Git\fresh_dashboard\app\data\optimize_results\optimize_results_20260923_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 12 - NIFTY_2026-09-24_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 816
+SHORT variants  : 816
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4      candles atr_multipli    bb_period   bb_num_std
+1     candles=5, atr_multiplier=0.0, bb_     0.58      19       19      12         0     6.06   0.42   0.58   0.50   0.42 sma_falling_ high_in_sma_ cumulative_o high_above_b            5          0.0           22          1.5
+2     candles=5, atr_multiplier=0.01, bb     0.58      19       19      12         0     6.06   0.42   0.58   0.50   0.42 sma_falling_ high_in_sma_ cumulative_o high_above_b            5         0.01           22          1.5
+3     candles=5, atr_multiplier=0.02, bb     0.58      19       19      12         0     6.06   0.42   0.58   0.50   0.42 sma_falling_ high_in_sma_ cumulative_o high_above_b            5         0.02           22          1.5
+4     candles=3, atr_multiplier=0.04, bb     0.55      18       18      11         0     6.26   0.46   0.55   0.46   0.36 sma_falling_ high_in_sma_ cumulative_o high_above_b            3         0.04           22          1.5
+5     candles=3, atr_multiplier=0.03, bb     0.55      18       18      11         0     6.26   0.46   0.55   0.46   0.36 sma_falling_ high_in_sma_ cumulative_o high_above_b            3         0.03           22          1.5
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 2766
+eod closes           : 1
+daily report         : D:\Git\fresh_dashboard\app\data\optimize_results\optimize_results_20260924_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 13 - NIFTY_2026-09-28_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 816
+SHORT variants  : 816
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4      candles atr_multipli    bb_period   bb_num_std
+1     candles=5, atr_multiplier=0.31, bb     0.53      20       20      19         0     3.38   0.47   0.53   0.37   0.16 sma_falling_ high_in_sma_ cumulative_o high_above_b            5         0.31           22          1.5
+2     candles=5, atr_multiplier=0.32, bb     0.53      20       20      19         0     3.38   0.47   0.53   0.37   0.16 sma_falling_ high_in_sma_ cumulative_o high_above_b            5         0.32           22          1.5
+3     candles=5, atr_multiplier=0.34, bb     0.53      20       20      19         0     3.38   0.47   0.53   0.37   0.16 sma_falling_ high_in_sma_ cumulative_o high_above_b            5         0.34           22          1.5
+4     candles=5, atr_multiplier=0.33, bb     0.53      20       20      19         0     3.38   0.47   0.53   0.37   0.16 sma_falling_ high_in_sma_ cumulative_o high_above_b            5         0.33           22          1.5
+5     candles=5, atr_multiplier=0.36, bb     0.53      20       20      19         0     3.38   0.47   0.53   0.37   0.16 sma_falling_ high_in_sma_ cumulative_o high_above_b            5         0.36           22          1.5
+
+--- LONG top variants (by hit rate, min setups 10) ---
+  (no LONG variant met the minimum setups guard)
+
+no-entry triggers    : 0
+zero-risk skipped    : 816
+eod closes           : 0
+daily report         : D:\Git\fresh_dashboard\app\data\optimize_results\optimize_results_20260928_12sec_1min_3min.xlsx
+
+====================================================================================================
+DAY 14 - NIFTY_2026-09-29_DASHBOARD.json
+====================================================================================================
+timeframes      : 12sec 1min 3min
+LONG variants   : 816
+SHORT variants  : 816
+
+--- SHORT top variants (by hit rate, min setups 10) ---
+  (no SHORT variant met the minimum setups guard)
+
+--- LONG top variants (by hit rate, min setups 10) ---
+rank  variant                            hit_rate  setups  entries  trades  no_entry  avg_pnl   stop     t1     t2     t3       cond_1       cond_2       cond_3       cond_4      candles atr_multipli    bb_period   bb_num_std
+1     candles=7, atr_multiplier=0.0, bb_     0.25      16       16      16         0     1.49   0.75   0.25   0.12   0.06 sma_rising_a low_in_sma_b cumulative_o low_below_bo            7          0.0           20          1.5
+2     candles=7, atr_multiplier=0.01, bb     0.25      16       16      16         0     1.49   0.75   0.25   0.12   0.06 sma_rising_a low_in_sma_b cumulative_o low_below_bo            7         0.01           20          1.5
+3     candles=7, atr_multiplier=0.02, bb     0.25      16       16      16         0     1.49   0.75   0.25   0.12   0.06 sma_rising_a low_in_sma_b cumulative_o low_below_bo            7         0.02           20          1.5
+4     candles=7, atr_multiplier=0.03, bb     0.25      16       16      16         0     1.49   0.75   0.25   0.12   0.06 sma_rising_a low_in_sma_b cumulative_o low_below_bo            7         0.03           20          1.5
+5     candles=7, atr_multiplier=0.04, bb     0.25      16       16      16         0     1.49   0.75   0.25   0.12   0.06 sma_rising_a low_in_sma_b cumulative_o low_below_bo            7         0.04           20          1.5
+
+no-entry triggers    : 0
+zero-risk skipped    : 188
+eod closes           : 1
+daily report         : D:\Git\fresh_dashboard\app\data\optimize_results\optimize_results_20260929_12sec_1min_3min.xlsx
+
+====================================================================================================
+COMBINED RUN SUMMARY
+====================================================================================================
+files processed         : 14
+variants evaluated      : LONG 816 / SHORT 816
+total triggers          : 131442
+total entries           : 131442
+total trades            : 113603
+no-entry triggers       : 0
+zero-risk skipped       : 17839
+eod closes              : 2650
+
+combined best SHORT
+  variant : candles=3, atr_multiplier=0.41, bb_period=22, bb_num_std=2
+  cond_1           : sma_falling_atr(period=44, candles=3, atr_period=14, atr_multiplier=0.41)
+  cond_2           : high_in_sma_band(period=44)
+  cond_3           : cumulative_oi_compare(side=ce_greater)
+  cond_4           : high_above_bollinger_upper(bb_period=22, bb_num_std=2)
+  candles          : 3
+  atr_multiplier   : 0.41
+  bb_period        : 22
+  bb_num_std       : 2
+  hit_rate: 0.500
+  setups  : 13
+  entries : 13
+  trades  : 12
+  no_entry: 0
+  avg_pnl : 3.9
+  stop    : 0.5
+  t1_rate : 0.5
+  t2_rate : 0.417
+  t3_rate : 0.333
+
+near-best SHORT band (within 0.03 of best hit rate, setups >= 10)
+  candles=3, atr_multiplier=0.41, bb_perio hit 0.500  setups 13  avg_pnl 3.9  stop 0.5
+  candles=3, atr_multiplier=0.43, bb_perio hit 0.500  setups 11  avg_pnl 4.36  stop 0.5
+  candles=3, atr_multiplier=0.41, bb_perio hit 0.471  setups 18  avg_pnl 2.69  stop 0.529
+
+combined best LONG
+  variant : candles=3, atr_multiplier=0.44, bb_period=20, bb_num_std=1.5
+  cond_1           : sma_rising_atr(period=44, candles=3, atr_period=14, atr_multiplier=0.44)
+  cond_2           : low_in_sma_band(period=44)
+  cond_3           : cumulative_oi_compare(side=pe_greater)
+  cond_4           : low_below_bollinger_lower(bb_period=20, bb_num_std=1.5)
+  candles          : 3
+  atr_multiplier   : 0.44
+  bb_period        : 20
+  bb_num_std       : 1.5
+  hit_rate: 0.364
+  setups  : 16
+  entries : 16
+  trades  : 11
+  no_entry: 0
+  avg_pnl : -0.75
+  stop    : 0.636
+  t1_rate : 0.364
+  t2_rate : 0.364
+  t3_rate : 0.364
+
+near-best LONG band (within 0.03 of best hit rate, setups >= 10)
+  candles=3, atr_multiplier=0.44, bb_perio hit 0.364  setups 16  avg_pnl -0.75  stop 0.636
+  candles=3, atr_multiplier=0.44, bb_perio hit 0.364  setups 15  avg_pnl -0.75  stop 0.636
+  candles=3, atr_multiplier=0.12, bb_perio hit 0.337  setups 120  avg_pnl 0.3  stop 0.653
+
+what the numbers say
+  - SHORT: best hit rate is not unique — 3 variants sit within 0.03 of the top; the pick is a band, not a single point.
+  - SHORT best variant hit rate spans 41.7 pts across 4 day(s) — day-to-day hit rate varies a lot.
+  - SHORT: runner-up 'candles=3, atr_multiplier=0.43, bb_perio' has higher avg P&L (4.36 vs 3.9 pts) at hit rate 0.50.
+  - SHORT top3 day conc : 0.83 (share of the best variant's trades coming from its 3 biggest days).
+  - LONG: best hit rate is not unique — 3 variants sit within 0.03 of the top; the pick is a band, not a single point.
+  - LONG best variant hit rate spans 100.0 pts across 5 day(s) — day-to-day hit rate varies a lot.
+  - LONG best variant is stop-heavy (stop rate 0.64).
+  - LONG top3 day conc : 0.73 (share of the best variant's trades coming from its 3 biggest days).
+
+ranking conclusion
+  primary candidate   : candles=3, atr_multiplier=0.41, bb_period=22, bb_num_std=2
+    why   : highest SHORT hit rate (0.500) with 12 trades and 3.9 avg pts.
+  secondary candidate : candles=3, atr_multiplier=0.43, bb_period=22, bb_num_std=2
+    why   : hit rate 0.500, avg P&L 4.36 pts.
+  rejected as final pick: candles=3, atr_multiplier=0. (0.45), candles=3, atr_multiplier=0. (0.45), candles=3, atr_multiplier=0. (0.45)
+  primary candidate   : candles=3, atr_multiplier=0.44, bb_period=20, bb_num_std=1.5
+    why   : highest LONG hit rate (0.364) with 11 trades and -0.75 avg pts.
+  secondary candidate : candles=3, atr_multiplier=0.44, bb_period=22, bb_num_std=1.5
+    why   : hit rate 0.364, avg P&L -0.75 pts.
+  rejected as final pick: candles=3, atr_multiplier=0. (0.33), candles=7, atr_multiplier=0. (0.33), candles=3, atr_multiplier=0. (0.33)
+
+recommended next step
+  1. freeze the primary candidate (SHORT: candles=3, atr_multiplier=0.41, bb_period=22, bb_num_std=2, LONG: candles=3, atr_multiplier=0.44, bb_period=20, bb_num_std=1.5).
+  2. keep the secondary as a comparison if avg P&L matters more than hit rate.
+  3. confirm the chosen candidate still holds on new days before final.
+
+one-line conclusion
+  Best usable candidates from this cartesian run: SHORT candles=3, atr_multiplier=0.41, bb_period=22, bb_num_std=2 (hit 0.50, 12 trades, 3.9 avg pts); LONG candles=3, atr_multiplier=0.44, bb_period=20, bb_num_std=1.5 (hit 0.36, 11 trades, -0.75 avg pts).
+====================================================================================================
+COMBINED EXCEL: D:\Git\fresh_dashboard\app\data\optimize_results\optimize_combined_20260930_125038.xlsx
+
+====================================================================================================
+OPTIMIZE MODE COMPLETE: 14/14 file(s) processed
+====================================================================================================

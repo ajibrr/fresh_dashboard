@@ -1,0 +1,16 @@
+OPTIMIZE MODE: 14 file(s) to process, one at a time
+====================================================================================================
+
+----------------------------------------------------------------------------------------------------
+[1/14] NIFTY_2026-09-08_DASHBOARD.json
+----------------------------------------------------------------------------------------------------
+WARNING: NIFTY_2026-09-08_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 12sec; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_2026-09-08_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 1min; every candle is zero-filled. Check the source file's timestamps.
+WARNING: NIFTY_2026-09-08_DASHBOARD.json -> 0 real candles inside market hours (09:15:00-15:30:00) at 3min; every candle is zero-filled. Check the source file's timestamps.
+Process started for the file : D:/Git/fresh_dashboard/app/data
+Timeframes tested : ['12sec', '1min', '3min']
+Entry candle rule : disabled — the trigger candle itself is the entry candle (entry at its close, SL at its low/high)
+R:R multiples     : [2.0, 3.0, 4.0]
+Total no of variation : 3 timeframes x 2 directions x 4 candles x 20 atr_multiplier x 2 bb_period x 2 bb_num_std x 3 R:R = 1920
+Workers : 12 (of 14 CPU cores available)
+Completed 1920 variations in 10.4s using 12 worker(s)
