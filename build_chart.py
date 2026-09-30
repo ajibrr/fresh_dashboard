@@ -246,15 +246,8 @@ BG, GRID, TXT = "#0b1220", "#1e293b", "#94a3b8"
 
 ES = {
     "Target": ("T", "#f59e0b"),
-    "Stop Loss": ("S", "#f43f5e"),
-    "End Of Data": ("E", "#94a3b8"),
+    "Stop Loss": ("S", "#f43f5e"),        "End Of Data": ("E", "#94a3b8"),
 }
-
-
-def fnum(v):
-    if v is None:
-        return "null"
-    return repr(round(float(v), 2))
 
 
 def render_chart(date, tf_label, rows, s9, s44, trades):
@@ -355,49 +348,51 @@ def trade_row_html(t):
                t["exit_price"], t["outcome"], t["pnl"] >= 0 and "up" or "dn", t["pnl"]))
 
 
-# ---- Build all days / timeframes ----
-days = []
-for path in sorted(INPUT.glob("NIFTY_*_DASHBOARD.json")):
-    stem = path.stem.replace("NIFTY_", "").replace("_DASHBOARD", "")
-    days.append(stem[:4] + "-" + stem[4:6] + "-" + stem[6:8])
-days = sorted(days)
+def main():
+    global TF_SEC
+    # ---- Build all days / timeframes ----
+    days = []
+    for path in sorted(INPUT.glob("NIFTY_*_DASHBOARD.json")):
+        stem = path.stem.replace("NIFTY_", "").replace("_DASHBOARD", "")
+        days.append(stem[:4] + "-" + stem[4:6] + "-" + stem[6:8])
+    days = sorted(days)
 
-CHARTS = {}
-TRADES = []
-for date in days:
-    ticks, flow, _ = load_ticks(INPUT, date)
-    for tf_label, tf_sec in TIMEFRAMES:
-        TF_SEC = tf_sec
-        rows = build_candles(ticks, flow, date)
-        s9, s44 = features_for(rows)
-        day_trades = []
-        for direction in ("LONG", "SHORT"):
-            for t in run_trades(rows, s9, s44, direction):
-                t["date"] = date
-                t["tf"] = tf_label
-                t["direction"] = direction
-                day_trades.append(t)
-                TRADES.append(t)
-        CHARTS[date + "|" + tf_label] = {
-            "svg": render_chart(date, tf_label, rows, s9, s44, day_trades),
-            "trades": day_trades,
-            "candles": len([r for r in rows if r["tick_count"] > 0]),
-        }
-    print("done", date, flush=True)
+    CHARTS = {}
+    TRADES = []
+    for date in days:
+        ticks, flow, _ = load_ticks(INPUT, date)
+        for tf_label, tf_sec in TIMEFRAMES:
+            TF_SEC = tf_sec
+            rows = build_candles(ticks, flow, date)
+            s9, s44 = features_for(rows)
+            day_trades = []
+            for direction in ("LONG", "SHORT"):
+                for t in run_trades(rows, s9, s44, direction):
+                    t["date"] = date
+                    t["tf"] = tf_label
+                    t["direction"] = direction
+                    day_trades.append(t)
+                    TRADES.append(t)
+            CHARTS[date + "|" + tf_label] = {
+                "svg": render_chart(date, tf_label, rows, s9, s44, day_trades),
+                "trades": day_trades,
+                "candles": len([r for r in rows if r["tick_count"] > 0]),
+            }
+        print("done", date, flush=True)
 
-TRADES.sort(key=lambda t: (t["date"], ["12sec", "1min", "3min", "5min"].index(t["tf"]), t["entry_time"]))
+    TRADES.sort(key=lambda t: (t["date"], ["12sec", "1min", "3min", "5min"].index(t["tf"]), t["entry_time"]))
 
-top = []
-top.append("<option value='ALL'>ALL DAYS</option>")
-for d in days:
-    top.append("<option value='%s'>%s</option>" % (d, d))
-tf_opts = "".join("<option value='%s'>%s</option>" % (t, t) for t in ("12sec", "1min", "3min", "5min"))
+    top = []
+    top.append("<option value='ALL'>ALL DAYS</option>")
+    for d in days:
+        top.append("<option value='%s'>%s</option>" % (d, d))
+    tf_opts = "".join("<option value='%s'>%s</option>" % (t, t) for t in ("12sec", "1min", "3min", "5min"))
 
-rows_js = json.dumps({k: v["trades"] for k, v in CHARTS.items()})
-charts_js = json.dumps({k: {"svg": v["svg"], "candles": v["candles"]} for k, v in CHARTS.items()})
-all_rows = "".join(trade_row_html(t) for t in TRADES)
+    rows_js = json.dumps({k: v["trades"] for k, v in CHARTS.items()})
+    charts_js = json.dumps({k: {"svg": v["svg"], "candles": v["candles"]} for k, v in CHARTS.items()})
+    all_rows = "".join(trade_row_html(t) for t in TRADES)
 
-page = """<!DOCTYPE html>
+    page = """<!DOCTYPE html>
 <html><head><meta charset="utf-8"><title>NIFTY Trade Chart</title>
 <style>
 body{background:#0b1220;color:#e2e8f0;font:13px/1.4 Segoe UI,Arial;margin:0}
@@ -477,17 +472,20 @@ for(var i=0;i<day.options.length;i++){var cc=CHARTS[day.options[i].value+"|12sec
 day.value=dv||day.options[1].value;draw();
 document.getElementById("all-details").addEventListener("toggle",function(){wrap.style.display=this.open?"block":"none"});
 </script></body></html>"""
-page = page.replace("__DAYOPTS__", "".join(top)).replace("__TFOPTS__", tf_opts)
-page = page.replace("__NALL__", str(len(TRADES))).replace("__ALLROWS__", all_rows)
-page = page.replace("__CHARTS__", charts_js).replace("__TRADES__", rows_js).replace("__DAYS__", json.dumps(days))
+    page = page.replace("__DAYOPTS__", "".join(top)).replace("__TFOPTS__", tf_opts)
+    page = page.replace("__NALL__", str(len(TRADES))).replace("__ALLROWS__", all_rows)
+    page = page.replace("__CHARTS__", charts_js).replace("__TRADES__", rows_js).replace("__DAYS__", json.dumps(days))
 
-OUT.write_text(page, encoding="utf-8")
-print("wrote", OUT, OUT.stat().st_size, "bytes")
-lt = sum(1 for t in TRADES if t["direction"] == "LONG")
-st = sum(1 for t in TRADES if t["direction"] == "SHORT")
-tt = sum(1 for t in TRADES if t["outcome"] == "Target")
-sl = sum(1 for t in TRADES if t["outcome"] == "Stop Loss")
-eod = sum(1 for t in TRADES if t["outcome"] == "End Of Data")
-tot = round(sum(t["pnl"] for t in TRADES), 2)
-print("trades: %d (LONG %d / SHORT %d) | Target %d / Stop %d / EOD %d | total P&L %+.2f pts"
-      % (len(TRADES), lt, st, tt, sl, eod, tot))
+    OUT.write_text(page, encoding="utf-8")
+    print("wrote", OUT, OUT.stat().st_size, "bytes")
+    lt = sum(1 for t in TRADES if t["direction"] == "LONG")
+    st = sum(1 for t in TRADES if t["direction"] == "SHORT")
+    tt = sum(1 for t in TRADES if t["outcome"] == "Target")
+    sl = sum(1 for t in TRADES if t["outcome"] == "Stop Loss")
+    eod = sum(1 for t in TRADES if t["outcome"] == "End Of Data")
+    tot = round(sum(t["pnl"] for t in TRADES), 2)
+    print("trades: %d (LONG %d / SHORT %d) | Target %d / Stop %d / EOD %d | total P&L %+.2f pts"
+          % (len(TRADES), lt, st, tt, sl, eod, tot))
+
+if __name__ == "__main__":
+    main()
